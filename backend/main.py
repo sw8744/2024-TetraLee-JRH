@@ -2,7 +2,8 @@ import dotenv
 import os
 import psycopg2
 import json
-from flask import Flask, jsonify, make_response
+from flask import Flask, jsonify, make_response, Response
+from functools import wraps
 
 app = Flask(__name__)
 app.config['JSON_AS_ASCII'] = False
@@ -19,27 +20,31 @@ connection = psycopg2.connect(
     )
 print("DB_Connected")
 
+def as_json(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        res = f(*args, **kwargs)
+        res = json.dumps(res, ensure_ascii=False).encode('utf8')
+        return Response(res, content_type='application/json; charset=utf-8')
+    return decorated_function
 
 @app.route('/api/menu', methods=['GET'])
+@as_json
 def get_menu():
-    # FIXME: 인코딩 오류 고칠 필요 있음.
     cur = connection.cursor()
     cur.execute("SELECT * FROM " + os.environ.get("TABLE_NAME"))
-    fetch = cur.fetchall()
-    res = json.dumps(fetch, ensure_ascii=False, indent=4)
-    res = json.loads(res)
-    print(type(res))
+    result = cur.fetchall()
     cur.close()
-    return res
+    return result
 
 @app.route('/api/menu/<age>', methods=['GET'])
+@as_json
 def get_recommend_menu(age):
     cur = connection.cursor()
     cur.execute("SELECT * FROM " + os.environ.get("TABLE_NAME") + " WHERE recommendation = '" + age.upper() + "'")
-    res = json.dumps(cur.fetchall(), ensure_ascii=False, indent=4)
-    res = make_response(res)
+    result = cur.fetchall()
     cur.close()
-    return res
+    return result
 
 @app.route('/api/updown', methods=['POST'])
 def updown():
