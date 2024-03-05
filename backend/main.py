@@ -159,54 +159,6 @@ def updown():
     capture.release()
     cv2.destroyAllWindows()
 
-    @app.route('/api/updown', methods=['POST'])
-    def updown():
-        # FIXME: Arduino와의 연동 필요
-        prev_pos = ""
-        capture = cv2.VideoCapture(0)
-        capture.set(cv2.CAP_PROP_FRAME_WIDTH, width)
-        capture.set(cv2.CAP_PROP_FRAME_HEIGHT, height)
-        print("Camera_Connected")
-        face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
-        while True:
-            ret, frame = capture.read()
-            gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-            faces = face_cascade.detectMultiScale(gray, 1.3, 5, minSize=(20, 20))
-            x_f = 0;
-            y_f = 0;
-            w_f = 0;
-            h_f = 0
-            for (x, y, w, h) in faces:
-                x_f = x;
-                y_f = y;
-                w_f = w;
-                h_f = h
-                cv2.rectangle(frame, (x, y), (x + w, y + h), (255, 0, 0), 2)
-                cv2.circle(frame, (x + w // 2, y + h // 2), 5, (0, 0, 255), -1)
-                # print(x, y, w, h)
-            if len(faces) > 0:
-                if y_f + h_f // 2 < height // 3:
-                    if prev_pos != "up":
-                        prev_pos = "up"
-                        print("up")
-                elif y_f + h_f // 2 < height // 3 * 2:
-                    print("middle")
-                    return make_response(jsonify({"result": "success"}), 200)
-                else:
-                    if prev_pos != "down":
-                        prev_pos = "down"
-                        print("down")
-            elif len(faces) == 0:
-                if prev_pos != "error":
-                    prev_pos = "error"
-                    print("Please see the camera correctly")
-            cv2.imshow('frame', frame)
-            if cv2.waitKey(1) & 0xFF == ord('q'):
-                break
-        capture.release()
-        cv2.destroyAllWindows()
-
-
 @app.route('/api/pay', methods=['POST'])
 def pay():
     # FIXME: Arduino와의 연동으로 카드 인식 필요
