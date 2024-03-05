@@ -54,6 +54,7 @@ def get_recommend_menu(age):
 @app.route('/api/updown', methods=['POST'])
 def updown():
     # FIXME: Arduino와의 연동 필요
+    prev_pos = ""
     capture = cv2.VideoCapture(0)
     capture.set(cv2.CAP_PROP_FRAME_WIDTH, width)
     capture.set(cv2.CAP_PROP_FRAME_HEIGHT, height)
@@ -71,20 +72,25 @@ def updown():
             # print(x, y, w, h)
         if len(faces) > 0:
             if y_f + h_f // 2 < height // 3:
-                print("up")
+                if prev_pos != "up":
+                    prev_pos = "up"
+                    print("up")
             elif y_f + h_f // 2 < height // 3 * 2:
                 print("middle")
                 return make_response(jsonify({"result": "success"}), 200)
             else:
-                print("down")
+                if prev_pos != "down":
+                    prev_pos = "down"
+                    print("down")
         elif len(faces) == 0:
-            print("Please see the camera correctly")
+            if prev_pos != "error":
+                prev_pos = "error"
+                print("Please see the camera correctly")
         cv2.imshow('frame', frame)
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
     capture.release()
     cv2.destroyAllWindows()
-
 
 @app.route('/api/pay', methods=['POST'])
 def pay():
