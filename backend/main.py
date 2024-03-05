@@ -4,6 +4,7 @@ import psycopg2
 import json
 from flask import Flask, jsonify, make_response, Response
 from functools import wraps
+import cv2
 
 app = Flask(__name__)
 app.config['JSON_AS_ASCII'] = False
@@ -49,6 +50,22 @@ def get_recommend_menu(age):
 @app.route('/api/updown', methods=['POST'])
 def updown():
     # FIXME: OpenCV와의 연동 필요
+    capture = cv2.VideoCapture(0)
+    capture.set(cv2.CAP_PROP_FRAME_WIDTH, 1920)
+    capture.set(cv2.CAP_PROP_FRAME_HEIGHT, 1080)
+    face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
+    while True:
+        ret, frame = capture.read()
+        gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+        faces = face_cascade.detectMultiScale(gray, 1.3, 5, minSize=(20,20))
+        for (x, y, w, h) in faces:
+            cv2.rectangle(frame, (x, y), (x+w, y+h), (255, 0, 0), 2)
+        cv2.imshow('frame', frame)
+        if cv2.waitKey(1) & 0xFF == ord('q'):
+            break
+
+    capture.release()
+    cv2.destroyAllWindows()
     print("updown")
     return jsonify({"result": "success"})
 
