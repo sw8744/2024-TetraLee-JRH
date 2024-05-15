@@ -51,10 +51,12 @@ def get_menu():
             "id": i[0],
             "name": i[1],
             "description": i[2],
+            "caution": i[8],
             "price": i[3],
             "recommendation": i[4],
             "kind": i[5],
-            "selling": i[6]
+            "selling": i[6],
+            "image": i[7]
         })
     return res
 
@@ -71,10 +73,12 @@ def get_recommend_menu(age):
             "id": i[0],
             "name": i[1],
             "description": i[2],
+            "caution": i[8],
             "price": i[3],
             "recommendation": i[4],
             "kind": i[5],
-            "selling": i[6]
+            "selling": i[6],
+            "image": i[7]
         })
     return res
 
