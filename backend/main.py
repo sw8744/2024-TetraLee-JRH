@@ -76,7 +76,7 @@ def updown():
     print("Camera_Connected")
     face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
     while True:
-        ser_conn = serial.Serial(ser, 9600)
+        # ser_conn = serial.Serial(ser, 9600)
         ret, frame = capture.read()
         gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
         faces = face_cascade.detectMultiScale(gray, 1.3, 5, minSize=(20, 20))
@@ -92,7 +92,7 @@ def updown():
                 if prev_pos != "up":
                     prev_pos = "up"
                     print("up")
-                    ser_conn.write(str.encode('1'))
+                    # ser_conn.write(str.encode('1'))
             elif y_f + h_f // 2 < height // 3 * 2:
                 print("middle")
                 time.sleep(0.5)
@@ -103,14 +103,14 @@ def updown():
                     ageNet.setInput(blob)
                     agePreds = ageNet.forward()
                     age = ageList[agePreds[0].argmax()]
-                    ser_conn.write(str.encode('0'))
+                    # ser_conn.write(str.encode('0'))
                     return make_response(jsonify({"age": age[1:-1]}), 200)
                 return make_response(jsonify({"result": "success"}), 200)
             else:
                 if prev_pos != "down":
                     prev_pos = "down"
                     print("down")
-                    ser_conn.write(str.encode('2'))
+                    # ser_conn.write(str.encode('2'))
         elif len(faces) == 0:
             if prev_pos != "error":
                 prev_pos = "error"
