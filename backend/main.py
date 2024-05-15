@@ -6,7 +6,6 @@ from flask import Flask, jsonify, make_response, Response
 from functools import wraps
 import cv2
 import time
-import serial
 
 app = Flask(__name__)
 app.config['JSON_AS_ASCII'] = False
@@ -46,7 +45,18 @@ def get_menu():
     cur.execute("SELECT * FROM " + os.environ.get("TABLE_NAME"))
     result = cur.fetchall()
     cur.close()
-    return result
+    res = []
+    for i in result:
+        res.append({
+            "id": i[0],
+            "name": i[1],
+            "description": i[2],
+            "price": i[3],
+            "recommendation": i[4],
+            "kind": i[5],
+            "selling": i[6]
+        })
+    return res
 
 @app.route('/api/menu/<age>', methods=['GET'])
 @as_json
@@ -55,7 +65,18 @@ def get_recommend_menu(age):
     cur.execute("SELECT * FROM " + os.environ.get("TABLE_NAME") + " WHERE recommendation = '" + age.upper() + "'")
     result = cur.fetchall()
     cur.close()
-    return result
+    res = []
+    for i in result:
+        res.append({
+            "id": i[0],
+            "name": i[1],
+            "description": i[2],
+            "price": i[3],
+            "recommendation": i[4],
+            "kind": i[5],
+            "selling": i[6]
+        })
+    return res
 
 @app.route('/api/menu/<kind>', methods=['GET'])
 @as_json
@@ -104,7 +125,13 @@ def updown():
                     agePreds = ageNet.forward()
                     age = ageList[agePreds[0].argmax()]
                     # ser_conn.write(str.encode('0'))
-                    return make_response(jsonify({"age": age[1:-1]}), 200)
+                    age_pred = age[1:-1]
+                    if age_pred in ['(0-2)', '(4-6)', '(8-12)']:
+                        return make_response(jsonify({"age": age_pred, "ageType": 'YOUNG'}, 200))
+                    elif age_pred in ['(15-20)', '(25-32)', '(38-43)', '(48-53)']:
+                        return make_response(jsonify({"age": age_pred, "ageType": 'MIDDLE'}, 200))
+                    elif age_pred in ['(60-100)']:
+                        return make_response(jsonify({"age": age_pred, "ageType": 'OLD'}, 200))
                 return make_response(jsonify({"result": "success"}), 200)
             else:
                 if prev_pos != "down":
@@ -154,7 +181,13 @@ def get_age():
                 ageNet.setInput(blob)
                 agePreds = ageNet.forward()
                 age = ageList[agePreds[0].argmax()]
-                return make_response(jsonify({"age": age[1:-1]}), 200)
+                age_pred = age[1:-1]
+                if age_pred in ['(0-2)', '(4-6)', '(8-12)']:
+                    return make_response(jsonify({"age": age_pred, "ageType": 'YOUNG'}, 200))
+                elif age_pred in ['(15-20)', '(25-32)', '(38-43)', '(48-53)']:
+                    return make_response(jsonify({"age": age_pred, "ageType": 'MIDDLE'}, 200))
+                elif age_pred in ['(60-100)']:
+                    return make_response(jsonify({"age": age_pred, "ageType": 'OLD'}, 200))
         elif len(faces) == 0:
             print("Face Doesn't Exists")
             return make_response(jsonify({"Error": "Face Doesn't Exists"}), 404)
