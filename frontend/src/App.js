@@ -1,8 +1,13 @@
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import Menu from './pages/Menu';
 function App() {
   return (
-    <div className="App">
-      <h1>2024-TetraLee-JRH</h1>
-    </div>
+    <Router>
+      <Routes>
+        <Route path="/menu" element={<Menu />} />
+      </Routes>
+    </Router>
   );
 }
 
