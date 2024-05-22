@@ -1,4 +1,3 @@
-import dotenv
 import os
 import psycopg2
 import json
@@ -10,9 +9,6 @@ import time
 app = Flask(__name__)
 app.config['JSON_AS_ASCII'] = False
 
-dotenv_file = dotenv.find_dotenv()
-dotenv.load_dotenv(dotenv_file)
-
 width = 640
 height = 480
 ser = 'COM3'
@@ -23,10 +19,10 @@ capture.set(cv2.CAP_PROP_FRAME_HEIGHT, height)
 
 connection = psycopg2.connect(
     host="osu-api.kro.kr",
-    database=os.environ.get("DB_NAME"),
-    port=int(os.environ.get("DB_PORT")),
-    user=os.environ.get("DB_USER"),
-    password=os.environ.get("DB_PASSWORD")
+    database="kiosk",
+    port=5432,
+    user="jrh",
+    password="ishs12345!"
     )
 print("DB_Connected")
 
@@ -42,7 +38,7 @@ def as_json(f):
 @as_json
 def get_menu():
     cur = connection.cursor()
-    cur.execute("SELECT * FROM " + os.environ.get("TABLE_NAME"))
+    cur.execute("SELECT * FROM food.food")
     result = cur.fetchall()
     cur.close()
     res = []
@@ -64,7 +60,7 @@ def get_menu():
 @as_json
 def get_recommend_menu(age):
     cur = connection.cursor()
-    cur.execute("SELECT * FROM " + os.environ.get("TABLE_NAME") + " WHERE recommendation = '" + age.upper() + "'")
+    cur.execute("SELECT * FROM food.food WHERE recommendation = '" + age.upper() + "'")
     result = cur.fetchall()
     cur.close()
     res = []
@@ -86,7 +82,7 @@ def get_recommend_menu(age):
 @as_json
 def get_kind_menu(kind):
     cur = connection.cursor()
-    cur.execute("SELECT * FROM " + os.environ.get("TABLE_NAME") + " WHERE kind = '" + kind + "'")
+    cur.execute("SELECT * FROM food.food WHERE kind = '" + kind + "'")
     result = cur.fetchall()
     cur.close()
     return result
