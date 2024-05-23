@@ -1,0 +1,60 @@
+.header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px 20px;
+    background-color: #FFE7E7;
+    border-bottom: 1px solid #493535;
+    font-size: 1000%;
+    font-weight: bold;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    text-align: center;
+}
+
+.oct {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #493535;
+    font-size: 500%;
+    font-weight: bold;
+    width: 100%;
+    height: 100%;
+    margin-bottom: 25%;
+}
+
+.make {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #493535;
+    font-size: 700%;
+    font-weight: bold;
+    margin-top: -10%;
+    width: 100%;
+    height: 100%;
+    
+}
+
+.coke {
+    margin : auto;
+    justify-content: center;
+    align-items: center;
+    margin-top: 15%;
+    font-size: 210%;
+    display: flex;
+    width: 90%;
+    height: 200%;
+    background-color: #FFE7E7;
+    margin-bottom: 30%;    
+
+}
+
+.bread {
+    justify-content: center;
+    align-items: center;
+    font-size:200%;
+    width: 100%;
+    height: 200%;
+}
+
