@@ -1,13 +1,16 @@
-import os
 import psycopg2
 import json
 from flask import Flask, jsonify, make_response, Response
 from functools import wraps
 import cv2
 import time
+from flask_cors import CORS
 
 app = Flask(__name__)
 app.config['JSON_AS_ASCII'] = False
+cors = CORS(app, resources={
+  r"/api/*": {"origin": "*"},
+})
 
 width = 640
 height = 480
@@ -34,6 +37,31 @@ def as_json(f):
         return Response(res, content_type='application/json; charset=utf-8')
     return decorated_function
 
+@app.route('/api/start/<whereToEat>', methods=['POST'])
+def start(whereToEat):
+    cur = connection.cursor()
+    cur.execute("SELECT * FROM purchase.history")
+    result = cur.fetchall()
+    cur.execute("INSERT INTO purchase.history (id, ordermenu, ispaid, date, wheretoeat) VALUES (%s, %s, %s, %s, %s)", (len(result) + 1, [], False, time.strftime('%Y-%m-%d %H:%M:%S'), whereToEat))
+    connection.commit()
+    cur.close()
+    return make_response(jsonify({"result": "success"}), 200)
+
+@app.route('/api/order/<id>/<menu>', methods=['POST'])
+def order(id, menu):
+    cur = connection.cursor()
+    cur.execute("SELECT * FROM purchase.history WHERE id = " + id)
+    result = cur.fetchall()
+    ordermenu = result[0][1]
+    if menu in ordermenu:
+        ordermenu[menu] += 1
+    else:
+        ordermenu[menu] = 1
+    cur.execute("UPDATE purchase.history SET ordermenu = %s WHERE id = %s", (ordermenu, id))
+    connection.commit()
+    cur.close()
+    return make_response(jsonify({"result": "success"}), 200)
+
 @app.route('/api/menu', methods=['GET'])
 @as_json
 def get_menu():
@@ -54,6 +82,19 @@ def get_menu():
             "selling": i[6],
             "image": i[7]
         })
+    return res
+
+@app.route('/api/kind', methods=['GET'])
+@as_json
+def get_kind():
+    cur = connection.cursor()
+    cur.execute("SELECT * FROM food.food")
+    result = cur.fetchall()
+    cur.close()
+    res = []
+    for i in result:
+        res.append(i[5])
+    res = {'kind': res}
     return res
 
 @app.route('/api/menu/<age>', methods=['GET'])
