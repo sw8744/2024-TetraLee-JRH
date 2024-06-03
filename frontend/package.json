@@ -9,11 +9,7 @@
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-router-dom": "^6.23.1",
-<<<<<<< Updated upstream
-    "react-scripts": "5.0.1",
-=======
     "react-scripts": "^5.0.1",
->>>>>>> Stashed changes
     "web-vitals": "^2.1.0"
   },
   "scripts": {

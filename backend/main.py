@@ -1,16 +1,19 @@
 import psycopg2
-import json
-from flask import Flask, jsonify, make_response, Response
-from functools import wraps
+from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 import cv2
 import time
-from flask_cors import CORS
 
-app = Flask(__name__)
-app.config['JSON_AS_ASCII'] = False
-cors = CORS(app, resources={
-  r"/api/*": {"origin": "*"},
-})
+app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 
 width = 640
 height = 480
@@ -29,15 +32,7 @@ connection = psycopg2.connect(
     )
 print("DB_Connected")
 
-def as_json(f):
-    @wraps(f)
-    def decorated_function(*args, **kwargs):
-        res = f(*args, **kwargs)
-        res = json.dumps(res, ensure_ascii=False).encode('utf8')
-        return Response(res, content_type='application/json; charset=utf-8')
-    return decorated_function
-
-@app.route('/api/start/<whereToEat>', methods=['POST'])
+@app.post('/api/start/<whereToEat>')
 def start(whereToEat):
     cur = connection.cursor()
     cur.execute("SELECT * FROM purchase.history")
@@ -45,9 +40,9 @@ def start(whereToEat):
     cur.execute("INSERT INTO purchase.history (id, ordermenu, ispaid, date, wheretoeat) VALUES (%s, %s, %s, %s, %s)", (len(result) + 1, [], False, time.strftime('%Y-%m-%d %H:%M:%S'), whereToEat))
     connection.commit()
     cur.close()
-    return make_response(jsonify({"result": "success"}), 200)
+    return {"result": "success"}
 
-@app.route('/api/order/<id>/<menu>', methods=['POST'])
+@app.post('/api/order/<id>/<menu>')
 def order(id, menu):
     cur = connection.cursor()
     cur.execute("SELECT * FROM purchase.history WHERE id = " + id)
@@ -60,10 +55,9 @@ def order(id, menu):
     cur.execute("UPDATE purchase.history SET ordermenu = %s WHERE id = %s", (ordermenu, id))
     connection.commit()
     cur.close()
-    return make_response(jsonify({"result": "success"}), 200)
+    return {"result": "success"}
 
-@app.route('/api/menu', methods=['GET'])
-@as_json
+@app.get('/api/menu')
 def get_menu():
     cur = connection.cursor()
     cur.execute("SELECT * FROM food.food")
@@ -84,8 +78,7 @@ def get_menu():
         })
     return res
 
-@app.route('/api/kind', methods=['GET'])
-@as_json
+@app.get('/api/kind')
 def get_kind():
     cur = connection.cursor()
     cur.execute("SELECT * FROM food.food")
@@ -97,8 +90,7 @@ def get_kind():
     res = {'kind': res}
     return res
 
-@app.route('/api/menu/<age>', methods=['GET'])
-@as_json
+@app.get('/api/menu/<age>')
 def get_recommend_menu(age):
     cur = connection.cursor()
     cur.execute("SELECT * FROM food.food WHERE recommendation = '" + age.upper() + "'")
@@ -119,8 +111,7 @@ def get_recommend_menu(age):
         })
     return res
 
-@app.route('/api/menu/<kind>', methods=['GET'])
-@as_json
+@app.get('/api/menu/<kind>')
 def get_kind_menu(kind):
     cur = connection.cursor()
     cur.execute("SELECT * FROM food.food WHERE kind = '" + kind + "'")
@@ -128,7 +119,7 @@ def get_kind_menu(kind):
     cur.close()
     return result
 
-@app.route('/api/updown', methods=['GET'])
+@app.get('/api/updown')
 def updown():
     prev_pos = ""
     ageProto = 'age_deploy.prototxt'
@@ -168,12 +159,12 @@ def updown():
                     # ser_conn.write(str.encode('0'))
                     age_pred = age[1:-1]
                     if age_pred in ['(0-2)', '(4-6)', '(8-12)']:
-                        return make_response(jsonify({"age": age_pred, "ageType": 'YOUNG'}, 200))
+                        return {"age": age_pred, "ageType": 'YOUNG'}
                     elif age_pred in ['(15-20)', '(25-32)', '(38-43)', '(48-53)']:
-                        return make_response(jsonify({"age": age_pred, "ageType": 'MIDDLE'}, 200))
+                        return {"age": age_pred, "ageType": 'MIDDLE'}
                     elif age_pred in ['(60-100)']:
-                        return make_response(jsonify({"age": age_pred, "ageType": 'OLD'}, 200))
-                return make_response(jsonify({"result": "success"}), 200)
+                        return {"age": age_pred, "ageType": 'OLD'}
+                return {"result": "success"}
             else:
                 if prev_pos != "down":
                     prev_pos = "down"
@@ -189,7 +180,7 @@ def updown():
     # capture.release()
     # cv2.destroyAllWindows()
 
-@app.route('/api/age', methods=['GET'])
+@app.get('/api/age')
 def get_age():
     capture = cv2.VideoCapture(0)
     capture.set(cv2.CAP_PROP_FRAME_WIDTH, width)
@@ -224,17 +215,18 @@ def get_age():
                 age = ageList[agePreds[0].argmax()]
                 age_pred = age[1:-1]
                 if age_pred in ['(0-2)', '(4-6)', '(8-12)']:
-                    return make_response(jsonify({"age": age_pred, "ageType": 'YOUNG'}, 200))
+                    return {"age": age_pred, "ageType": 'YOUNG'}
                 elif age_pred in ['(15-20)', '(25-32)', '(38-43)', '(48-53)']:
-                    return make_response(jsonify({"age": age_pred, "ageType": 'MIDDLE'}, 200))
+                    return {"age": age_pred, "ageType": 'MIDDLE'}
                 elif age_pred in ['(60-100)']:
-                    return make_response(jsonify({"age": age_pred, "ageType": 'OLD'}, 200))
+                    return {"age": age_pred, "ageType": 'OLD'}
         elif len(faces) == 0:
             print("Face Doesn't Exists")
-            return make_response(jsonify({"Error": "Face Doesn't Exists"}), 404)
+            raise HTTPException(404, "Face Doesn't Exists")
         cv2.imshow('frame', frame)
     capture.release()
     cv2.destroyAllWindows()
 
-if __name__ == '__main__':
-    app.run(debug=True)
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run(app, host="127.0.0.1", port=5000)

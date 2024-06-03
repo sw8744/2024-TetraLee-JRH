@@ -1,0 +1,14 @@
+.touchButton {
+    color: #493535;
+    font-size: 900%;
+    font-weight: bold;
+    background-color: transparent;
+    border: none;
+    width: 1080px;
+    height: 1920px;
+}
+
+.root {
+    width: 1080px;
+    height: 1920px;
+}

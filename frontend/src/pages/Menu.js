@@ -2,10 +2,6 @@ import { useSearchParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import './Menu.css';
 
-function fetchKind() {
-    
-}
-
 function Menu() {
     const [searchParams] = useSearchParams();
     const [menuKind, setMenuKind] = useState('');
