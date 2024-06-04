@@ -1,13 +1,32 @@
 import { useSearchParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import './Menu.css';
+import Header from './Header';
 
 function Menu() {
     const [searchParams] = useSearchParams();
     const [menuKind, setMenuKind] = useState('');
     const [menu, setMenu] = useState('');
     const [clickedKind, setClickedKind] = useState('추천');
-    const whereToEat = searchParams.get('whereToEat');
+    const id = searchParams.get('id');
+    const [whereToEat, setWhereToEat] = useState('');
+    const [orderMenu, setOrderMenu] = useState('');
+
+    const fetchId = async () => {
+        fetch('http://127.0.0.1:5000/api/getinfo/' + id)
+        .then(response => response.json())
+        .then(data => {
+            setWhereToEat(data.wheretoeat);
+        });
+    };
+
+    const fetchOrderMenu = async () => {
+        fetch('http://127.0.0.1:5000/api/ordermenu/' + id)
+        .then(response => response.json())
+        .then(data => {
+            setOrderMenu(data);
+        });
+    };
     
     const fetchKind = async () => {
         fetch('http://127.0.0.1:5000/api/kind')
@@ -28,14 +47,15 @@ function Menu() {
     }
 
     useEffect(() => {
+        fetchId();
         fetchKind();
         fetchMenu();
+        fetchOrderMenu();
     }, []);
-
 
     return (
         <>
-            <header className='header'>{whereToEat}</header>
+            <Header whereToEat={whereToEat}/>
             <div className='menuKindSelector'>
                 {menuKind && menuKind.map((menu) => (
                 <button className={
@@ -63,8 +83,21 @@ function Menu() {
             ))}
             </div>
             <div className='orderSelector'>
-                <button className='orderButton'>주문하기</button>
+                {orderMenu && orderMenu.map((menu) => (
+                        <div className='orderMenu'>
+                            <img src={menu.image} alt={menu.name} className='orderImg'/>
+                            <div className='orderName'>{menu.name} × {menu.amount}</div>
+                    </div>
+                ))}
             </div>
+            <footer className='footer1'>
+                <button className='leftButton'>{'<'}</button>
+                <button className='rightButton'>{'>'}</button>
+            </footer>
+            <footer className='footer2'>
+                <button className='previousButton'>이전</button>
+                <button className='nextButton'>다음</button>
+            </footer>
         </>
     );
 }

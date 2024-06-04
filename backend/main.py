@@ -8,7 +8,7 @@ app = FastAPI()
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=['*'],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -32,30 +32,73 @@ connection = psycopg2.connect(
     )
 print("DB_Connected")
 
-@app.post('/api/start/<whereToEat>')
+c = connection.cursor()
+c.execute("SELECT * FROM food.food")
+menu = c.fetchall()
+c.close()
+print(menu)
+
+@app.get('/api/start/{whereToEat}')
 def start(whereToEat):
+    if whereToEat not in ['eatIn', 'takeOut']:
+        return HTTPException(400, 'whereToEat is not correct')
+    where = ''
+    if whereToEat == 'takeOut':
+        where = "포장"
+    elif whereToEat == 'eatIn':
+        where = "매장"
     cur = connection.cursor()
     cur.execute("SELECT * FROM purchase.history")
     result = cur.fetchall()
-    cur.execute("INSERT INTO purchase.history (id, ordermenu, ispaid, date, wheretoeat) VALUES (%s, %s, %s, %s, %s)", (len(result) + 1, [], False, time.strftime('%Y-%m-%d %H:%M:%S'), whereToEat))
+    num = len(result) + 1
+    ordermenu = [0 for _ in range(len(menu))]
+    cur.execute("INSERT INTO purchase.history (id, ordermenu, ispaid, date, wheretoeat) VALUES (%s, %s, %s, %s, %s)", (num, ordermenu, False, time.strftime('%Y-%m-%d %H:%M:%S'), where))
+    connection.commit()
+    cur.close()
+    return {"order_num": num}
+
+@app.get('/api/getinfo/{id}')
+def get_info(id):
+    id_int = int(id)
+    cur = connection.cursor()
+    cur.execute("SELECT * FROM purchase.history WHERE id = " + id)
+    result = cur.fetchall()
+    result = result[0]
+    cur.close()
+    return {"id": result[0], "ordermenu": result[1], "ispaid": result[2], "date": result[3], "wheretoeat": result[4]}
+
+@app.post('/api/order/{id}/{menuId}')
+def order(id, menuId):
+    id_int = int(id)
+    menu_id = int(menuId)
+    cur = connection.cursor()
+    cur.execute("SELECT * FROM purchase.history WHERE id = " + id)
+    result = cur.fetchall()
+    result = result[0][1]
+    result[menu_id - 1] += 1
+    cur.execute("UPDATE purchase.history SET ordermenu = %s WHERE id = %s", (result, id))
     connection.commit()
     cur.close()
     return {"result": "success"}
 
-@app.post('/api/order/<id>/<menu>')
-def order(id, menu):
+@app.get('/api/ordermenu/{id}')
+def orderMenu(id):
+    id_int = int(id)
     cur = connection.cursor()
     cur.execute("SELECT * FROM purchase.history WHERE id = " + id)
     result = cur.fetchall()
-    ordermenu = result[0][1]
-    if menu in ordermenu:
-        ordermenu[menu] += 1
-    else:
-        ordermenu[menu] = 1
-    cur.execute("UPDATE purchase.history SET ordermenu = %s WHERE id = %s", (ordermenu, id))
-    connection.commit()
+    result = result[0][1]
     cur.close()
-    return {"result": "success"}
+    res = []
+    for i in range(len(result)):
+        if result[i] != 0:
+            res.append({
+                "id": i + 1,
+                "name": menu[i][1],
+                "amount": result[i],
+                "image": menu[i][7]
+            })
+    return res
 
 @app.get('/api/menu')
 def get_menu():
@@ -76,6 +119,7 @@ def get_menu():
             "selling": i[6],
             "image": i[7]
         })
+    menu = res
     return res
 
 @app.get('/api/kind')
@@ -90,7 +134,7 @@ def get_kind():
     res = {'kind': res}
     return res
 
-@app.get('/api/menu/<age>')
+@app.get('/api/menu/{age}')
 def get_recommend_menu(age):
     cur = connection.cursor()
     cur.execute("SELECT * FROM food.food WHERE recommendation = '" + age.upper() + "'")
@@ -111,7 +155,7 @@ def get_recommend_menu(age):
         })
     return res
 
-@app.get('/api/menu/<kind>')
+@app.get('/api/menu/{kind}')
 def get_kind_menu(kind):
     cur = connection.cursor()
     cur.execute("SELECT * FROM food.food WHERE kind = '" + kind + "'")
