@@ -155,13 +155,34 @@ def get_recommend_menu(age):
         })
     return res
 
-@app.get('/api/menu/{kind}')
+@app.get('/api/menukind/{kind}')
 def get_kind_menu(kind):
     cur = connection.cursor()
     cur.execute("SELECT * FROM food.food WHERE kind = '" + kind + "'")
     result = cur.fetchall()
     cur.close()
     return result
+
+@app.get('/api/getfoodinfo/{id}')
+def get_food_info(id):
+    cur = connection.cursor()
+    cur.execute("SELECT * FROM food.food WHERE id = " + id)
+    result = cur.fetchall()
+    cur.close()
+    res = []
+    for i in result:
+        res.append({
+            "id": i[0],
+            "name": i[1],
+            "description": i[2],
+            "caution": i[8],
+            "price": i[3],
+            "recommendation": i[4],
+            "kind": i[5],
+            "selling": i[6],
+            "image": i[7]
+        })
+    return res
 
 @app.get('/api/updown')
 def updown():

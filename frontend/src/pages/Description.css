@@ -1,0 +1,72 @@
+.imgDiv {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #C4C4C4;
+    margin-top: 40px;
+    margin-left: 20px;
+    margin-right: 20px;
+}
+
+.foodImage {
+    width: 500px;
+    height: 500px;
+    object-fit: cover;
+    border: 1px solid #C4C4C4;
+    margin: 20px;
+}
+
+.titleDiv {
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    flex-wrap: wrap;
+    margin-top: -70px;
+    margin-left: 40px;
+    margin-right: 40px;
+    margin-bottom: -80px;
+}
+
+.foodName {
+    font-size: 600%;
+    font-weight: bold;
+    color: #493535;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.price {
+    font-size: 400%;
+    color: #493535;
+    margin-top: -100px;
+}
+
+.descDiv {
+    align-items: center;
+    margin-top: 20px;
+    margin-left: 40px;
+    margin-right: 40px;
+
+}
+
+.title {
+    margin-top: -10px;
+    font-size: 350%;
+    font-weight: bold;
+    font-family:system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    color: #493535;
+    margin-bottom: -15px;
+}
+
+.description_txt {
+    font-size: 250%;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    color: #493535;
+    margin-left: 30px;
+}
+
+.amountDiv {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}

@@ -2,6 +2,7 @@ import { useSearchParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import './Menu.css';
 import Header from './Header';
+import Footer from './Footer';
 
 function Menu() {
     const [searchParams] = useSearchParams();
@@ -94,10 +95,7 @@ function Menu() {
                 <button className='leftButton'>{'<'}</button>
                 <button className='rightButton'>{'>'}</button>
             </footer>
-            <footer className='footer2'>
-                <button className='previousButton'>이전</button>
-                <button className='nextButton'>다음</button>
-            </footer>
+            <Footer/>
         </>
     );
 }

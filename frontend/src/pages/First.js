@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 function First() {
     const navigate = useNavigate();
     const touch = () => {
-        navigate('/second');
+        navigate('/wheretoeat');
     }
     return (
         <>

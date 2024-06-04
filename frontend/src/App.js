@@ -4,14 +4,16 @@ import Menu from './pages/Menu';
 import First from './pages/First';
 import Second from './pages/Second'
 import Receipt from './pages/Receipt'
+import Description from './pages/Description';
 function App() {
   return (
     <Router>
       <Routes>
         <Route path="/" element={<First />} />
         <Route path="/menu" element={<Menu />} />
-        <Route path="/Second" element={<Second />} />
-        <Route path="/Receipt" element={<Receipt />} />
+        <Route path="/wheretoeat" element={<Second />} />
+        <Route path='/description' element={<Description />} />
+        <Route path="/receipt" element={<Receipt />} />
       </Routes>
     </Router>
   );
