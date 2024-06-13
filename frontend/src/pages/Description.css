@@ -69,7 +69,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-top: 40px;
+    margin-top: 120px;
     margin-bottom: 40px;
     width: 100%;
 
@@ -103,6 +103,9 @@
     width: 300px;
     height: 100px;
     color: #493535;
-    margin-left: 20px;
-    
+    margin-left: 20px;   
+}
+
+.footer2 {
+    margin-top: 148px;
 }

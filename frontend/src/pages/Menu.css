@@ -141,16 +141,12 @@
     margin-top: 15px;
 }
 
-.previousButton, .nextButton {
+.previousButton{
     background-color: #C4C4C4;
     font-size: 500%;
-    width: 25%;
+    width: 100%;
     height: 100%;
     color: #493535;
-}
-
-.footer2 {
-    margin-top: 20px;
 }
 
 .amountDiv {
@@ -160,4 +156,9 @@
 .orderButton {
     margin-right: 40px;
     width: 100%;
+}
+
+.amount {
+    width: 120px;
+    text-align: center;
 }

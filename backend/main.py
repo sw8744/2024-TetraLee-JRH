@@ -71,15 +71,15 @@ def get_info(id):
     cur.close()
     return {"id": result[0], "ordermenu": result[1], "ispaid": result[2], "date": result[3], "wheretoeat": result[4]}
 
-@app.post('/api/order/{id}/{menuId}')
-def order(id, menuId):
+@app.post('/api/order/{id}/{menuId}/{amount}')
+def order(id, menuId, amount):
     id_int = int(id)
     menu_id = int(menuId)
     cur = connection.cursor()
     cur.execute("SELECT * FROM purchase.history WHERE id = " + id)
     result = cur.fetchall()
     result = result[0][1]
-    result[menu_id - 1] += 1
+    result[menu_id - 1] += int(amount)
     cur.execute("UPDATE purchase.history SET ordermenu = %s WHERE id = %s", (result, id))
     connection.commit()
     cur.close()
@@ -206,11 +206,17 @@ def updown():
     ageList = ['(0-2)', '(4-6)', '(8-12)', '(15-20)', '(25-32)', '(38-43)', '(48-53)', '(60-100)']
     print("Camera_Connected")
     face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
+    # 0 for finish acting
     if isArduino:
         ser_conn = serial.Serial(ser, 9600)
-        for _ in range(3):
-            ser_conn.write(str.encode('3'))
-            time.sleep(0.5)
+        while True:
+            if ser_conn.readline().decode('utf-8') == '0':
+                break
+            else:
+                ser_conn.write(str.encode('3'))
+        while True:
+            if ser_conn.readline().decode('utf-8') == '0':
+                break
         ser_conn.write(str.encode('1'))
     while True:
         ret, frame = capture.read()
@@ -222,7 +228,6 @@ def updown():
             x_f = x; y_f = y; w_f = w; h_f = h
             cv2.rectangle(frame, (x, y), (x+w, y+h), (255, 0, 0), 2)
             cv2.circle(frame, (x + w // 2, y + h // 2), 5, (0, 0, 255), -1)
-            # print(x, y, w, h)
             # 1 for up, 2 for stop, 3 for down
         if len(faces) > 0:
             if y_f + h_f // 2 < height // 3 * 2:

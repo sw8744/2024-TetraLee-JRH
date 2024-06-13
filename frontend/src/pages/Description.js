@@ -2,6 +2,7 @@ import './Description.css';
 import { useSearchParams } from 'react-router-dom';
 import Header from './Header';
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 function Description() {
     const [searchParams] = useSearchParams();
@@ -10,6 +11,8 @@ function Description() {
     const [whereToEat, setWhereToEat] = useState('');
     const [info, setInfo] = useState('');
     const [amount, setAmount] = useState(0);
+
+    const navigate = useNavigate();
 
     const fetchId = async () => {
         fetch('http://127.0.0.1:5000/api/getinfo/' + id)
@@ -24,6 +27,7 @@ function Description() {
         .then(response => response.json())
         .then(data => {
             setInfo(data[0]);
+            console.log(data[0])
         });
     }
 
@@ -33,6 +37,28 @@ function Description() {
         .then(data => {
             setAmount(data.amount);
         });
+    };
+
+    const plusAmount = () => {
+        setAmount(amount + 1);
+    };
+
+    const minusAmount = () => {
+        setAmount(amount - 1);
+    };
+
+    const order = async () => {
+        fetch('http://127.0.0.1/api/order/' + id + '/' + clickedFood + '/' + amount,
+         {
+            method: 'POST'
+         }
+        )
+        .then(response => response.json())
+        .then(data => {
+            // console.log(data);
+        });
+
+        navigate('/menu?id=' + id);
     };
 
     useEffect(() => {
@@ -61,15 +87,14 @@ function Description() {
             </div>
             <div className='buttonDiv'>
                 <div className='amountDiv'>
-                    <button className='minusButton'>-</button>
+                    <button className='minusButton' onClick={minusAmount}>-</button>
                     <p className='amount'>{amount}</p>
-                    <button className='plusButton'>+</button>
+                    <button className='plusButton' onClick={plusAmount}>+</button>
                 </div>
-                <button className='orderButton'>주문하기</button>
+                <button className='orderButton' onClick={order}>주문하기</button>
             </div>
             <footer className='footer2'>
-                <button className='previousButton'>이전</button>
-                <button className='nextButton'>다음</button>
+                <button className='previousButton'>이전으로</button>
             </footer>
         </div>
     );
