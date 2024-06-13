@@ -232,14 +232,8 @@ def updown():
     # 0 for finish acting
     if isArduino:
         ser_conn = serial.Serial(ser, 9600)
-        while True:
-            ser_conn.write(str.encode('0'))
-            if ser_conn.readline().decode() == '0':
-                break
-            time.sleep(0.5)
-        for _ in range(3):
-            ser_conn.write(str.encode('3'))
-            time.sleep(0.5)
+        time.sleep(2)
+        ser_conn.write(str.encode('3'))
         ser_conn.write(str.encode('1'))
 
     while True:
