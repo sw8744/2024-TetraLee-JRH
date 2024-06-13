@@ -2,7 +2,6 @@ import './Description.css';
 import { useSearchParams } from 'react-router-dom';
 import Header from './Header';
 import { useEffect, useState } from 'react';
-import Footer from './Footer';
 
 function Description() {
     const [searchParams] = useSearchParams();
@@ -28,11 +27,18 @@ function Description() {
         });
     }
 
-
+    const getAmount = async () => {
+        fetch('http://127.0.0.1:5000/api/getfoodamount/' + id + '/' + clickedFood)
+        .then(response => response.json())
+        .then(data => {
+            setAmount(data.amount);
+        });
+    };
 
     useEffect(() => {
         fetchId();
         getClickedFood();
+        getAmount();
     }, []);
 
     return (
@@ -59,8 +65,12 @@ function Description() {
                     <p className='amount'>{amount}</p>
                     <button className='plusButton'>+</button>
                 </div>
+                <button className='orderButton'>주문하기</button>
             </div>
-            <Footer className='footer' />
+            <footer className='footer2'>
+                <button className='previousButton'>이전</button>
+                <button className='nextButton'>다음</button>
+            </footer>
         </div>
     );
 };

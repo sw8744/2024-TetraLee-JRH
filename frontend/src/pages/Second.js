@@ -1,6 +1,5 @@
 import './Second.css';
 import { useNavigate } from 'react-router-dom';
-import { useState } from 'react';
 
 function Second() {
     const navigate = useNavigate();

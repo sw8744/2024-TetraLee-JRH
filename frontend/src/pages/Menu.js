@@ -2,7 +2,8 @@ import { useSearchParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import './Menu.css';
 import Header from './Header';
-import Footer from './Footer';
+import { useNavigate } from 'react-router-dom';
+
 
 function Menu() {
     const [searchParams] = useSearchParams();
@@ -12,6 +13,7 @@ function Menu() {
     const id = searchParams.get('id');
     const [whereToEat, setWhereToEat] = useState('');
     const [orderMenu, setOrderMenu] = useState('');
+    const navigate = useNavigate();
 
     const fetchId = async () => {
         fetch('http://127.0.0.1:5000/api/getinfo/' + id)
@@ -45,6 +47,10 @@ function Menu() {
         .then(data => {
             setMenu(data);
         });
+    }
+
+    const goNext = () => {
+        navigate('/pay?id=' + id);
     }
 
     useEffect(() => {
@@ -95,7 +101,10 @@ function Menu() {
                 <button className='leftButton'>{'<'}</button>
                 <button className='rightButton'>{'>'}</button>
             </footer>
-            <Footer/>
+            <footer className='footer2'>
+                <button className='previousButton'>이전</button>
+                <button className='nextButton' onClick={goNext}>다음</button>
+            </footer>
         </>
     );
 }

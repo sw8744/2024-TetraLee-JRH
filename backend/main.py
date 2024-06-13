@@ -3,6 +3,7 @@ from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 import cv2
 import time
+import serial
 
 app = FastAPI()
 
@@ -14,10 +15,13 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-
 width = 640
 height = 480
-ser = 'COM3'
+ser = ""
+isArduino = False
+if input("Do you want to use Arduino? (y/n): ") == 'y':
+    isArduino = True
+    ser = input("Enter the serial port: ")
 
 capture = cv2.VideoCapture(0)
 capture.set(cv2.CAP_PROP_FRAME_WIDTH, width)
@@ -184,6 +188,15 @@ def get_food_info(id):
         })
     return res
 
+@app.get('/api/getfoodamount/{id}/{foodId}')
+def get_food_info(id, foodId):
+    foodid_int = int(foodId)
+    cur = connection.cursor()
+    cur.execute("SELECT * FROM purchase.history WHERE id = " + id)
+    result = cur.fetchall()
+    cur.close()
+    return {"amount": result[0][1][foodid_int]}
+
 @app.get('/api/updown')
 def updown():
     prev_pos = ""
@@ -193,9 +206,13 @@ def updown():
     ageList = ['(0-2)', '(4-6)', '(8-12)', '(15-20)', '(25-32)', '(38-43)', '(48-53)', '(60-100)']
     print("Camera_Connected")
     face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
+    if isArduino:
+        ser_conn = serial.Serial(ser, 9600)
+        ser_conn.write(str.encode('3'))
+        ser_conn.write(str.encode('1'))
     while True:
-        # ser_conn = serial.Serial(ser, 9600)
         ret, frame = capture.read()
+        frame = cv2.rotate(frame, cv2.ROTATE_90_CLOCKWISE)
         gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
         faces = face_cascade.detectMultiScale(gray, 1.3, 5, minSize=(20, 20))
         x_f = 0; y_f = 0; w_f = 0; h_f = 0
@@ -204,15 +221,11 @@ def updown():
             cv2.rectangle(frame, (x, y), (x+w, y+h), (255, 0, 0), 2)
             cv2.circle(frame, (x + w // 2, y + h // 2), 5, (0, 0, 255), -1)
             # print(x, y, w, h)
-            # 0 for stop, 1 for up, 2 for down
+            # 1 for up, 2 for stop, 3 for down
         if len(faces) > 0:
-            if y_f + h_f // 2 < height // 3:
-                if prev_pos != "up":
-                    prev_pos = "up"
-                    print("up")
-                    # ser_conn.write(str.encode('1'))
-            elif y_f + h_f // 2 < height // 3 * 2:
+            if y_f + h_f // 2 < height // 3 * 2:
                 print("middle")
+                ser_conn.write(str.encode('2'))
                 time.sleep(0.5)
                 for (x, y, w, h) in faces:
                     face_img = frame[y:y, h:h + w].copy()
@@ -221,7 +234,7 @@ def updown():
                     ageNet.setInput(blob)
                     agePreds = ageNet.forward()
                     age = ageList[agePreds[0].argmax()]
-                    # ser_conn.write(str.encode('0'))
+
                     age_pred = age[1:-1]
                     if age_pred in ['(0-2)', '(4-6)', '(8-12)']:
                         return {"age": age_pred, "ageType": 'YOUNG'}
@@ -230,11 +243,6 @@ def updown():
                     elif age_pred in ['(60-100)']:
                         return {"age": age_pred, "ageType": 'OLD'}
                 return {"result": "success"}
-            else:
-                if prev_pos != "down":
-                    prev_pos = "down"
-                    print("down")
-                    # ser_conn.write(str.encode('2'))
         elif len(faces) == 0:
             if prev_pos != "error":
                 prev_pos = "error"
@@ -260,6 +268,7 @@ def get_age():
     ages = []
     while True:
         ret, frame = capture.read()
+        frame = cv2.rotate(frame, cv2.ROTATE_90_CLOCKWISE)
         if not ret:
             break
         gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)

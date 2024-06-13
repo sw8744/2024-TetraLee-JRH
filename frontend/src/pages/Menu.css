@@ -140,3 +140,24 @@
 .orderName {
     margin-top: 15px;
 }
+
+.previousButton, .nextButton {
+    background-color: #C4C4C4;
+    font-size: 500%;
+    width: 25%;
+    height: 100%;
+    color: #493535;
+}
+
+.footer2 {
+    margin-top: 20px;
+}
+
+.amountDiv {
+    margin-left: 40px;
+}
+
+.orderButton {
+    margin-right: 40px;
+    width: 100%;
+}

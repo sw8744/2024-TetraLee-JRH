@@ -65,8 +65,44 @@
     margin-left: 30px;
 }
 
+.buttonDiv {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 40px;
+    margin-bottom: 40px;
+    width: 100%;
+
+}
+
 .amountDiv {
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
+}
+
+.minusButton, .plusButton {
+    background-color: #C4C4C4;
+    font-size: 190%;
+    width: 100px;
+    height: 80px;
+    color: #493535;
+}
+
+.amount {
+    font-size: 200%;
+    font-weight: bold;
+    color: #493535;
+    margin-left: 20px;
+    margin-right: 20px;
+}
+
+.orderButton {
+    background-color: #C4C4C4;
+    font-size: 200%;
+    width: 300px;
+    height: 100px;
+    color: #493535;
+    margin-left: 20px;
+    
 }
