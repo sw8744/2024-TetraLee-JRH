@@ -209,14 +209,9 @@ def updown():
     # 0 for finish acting
     if isArduino:
         ser_conn = serial.Serial(ser, 9600)
-        while True:
-            if ser_conn.readline().decode('utf-8') == '0':
-                break
-            else:
-                ser_conn.write(str.encode('3'))
-        while True:
-            if ser_conn.readline().decode('utf-8') == '0':
-                break
+        for _ in range(3):
+            ser_conn.write(str.encode('3'))
+            time.sleep(0.5)
         ser_conn.write(str.encode('1'))
     while True:
         ret, frame = capture.read()
