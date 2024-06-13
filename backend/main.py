@@ -208,11 +208,13 @@ def updown():
     face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
     if isArduino:
         ser_conn = serial.Serial(ser, 9600)
-        ser_conn.write(str.encode('3'))
+        for _ in range(3):
+            ser_conn.write(str.encode('3'))
+            time.sleep(0.5)
         ser_conn.write(str.encode('1'))
     while True:
         ret, frame = capture.read()
-        frame = cv2.rotate(frame, cv2.ROTATE_90_CLOCKWISE)
+        frame = cv2.rotate(frame, cv2.ROTATE_90_COUNTERCLOCKWISE)
         gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
         faces = face_cascade.detectMultiScale(gray, 1.3, 5, minSize=(20, 20))
         x_f = 0; y_f = 0; w_f = 0; h_f = 0
