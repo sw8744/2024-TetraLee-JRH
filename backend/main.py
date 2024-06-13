@@ -46,35 +46,43 @@ print(menu)
 def start(whereToEat):
     if whereToEat not in ['eatIn', 'takeOut']:
         return HTTPException(400, 'whereToEat is not correct')
+
     where = ''
     if whereToEat == 'takeOut':
         where = "포장"
     elif whereToEat == 'eatIn':
         where = "매장"
+
     cur = connection.cursor()
     cur.execute("SELECT * FROM purchase.history")
     result = cur.fetchall()
+
     num = len(result) + 1
     ordermenu = [0 for _ in range(len(menu))]
+
     cur.execute("INSERT INTO purchase.history (id, ordermenu, ispaid, date, wheretoeat) VALUES (%s, %s, %s, %s, %s)", (num, ordermenu, False, time.strftime('%Y-%m-%d %H:%M:%S'), where))
     connection.commit()
     cur.close()
+
     return {"order_num": num}
 
 @app.get('/api/getinfo/{id}')
 def get_info(id):
     id_int = int(id)
+
     cur = connection.cursor()
     cur.execute("SELECT * FROM purchase.history WHERE id = " + id)
     result = cur.fetchall()
     result = result[0]
     cur.close()
+
     return {"id": result[0], "ordermenu": result[1], "ispaid": result[2], "date": result[3], "wheretoeat": result[4]}
 
 @app.post('/api/order/{id}/{menuId}/{amount}')
 def order(id, menuId, amount):
     id_int = int(id)
     menu_id = int(menuId)
+
     cur = connection.cursor()
     cur.execute("SELECT * FROM purchase.history WHERE id = " + id)
     result = cur.fetchall()
@@ -83,16 +91,19 @@ def order(id, menuId, amount):
     cur.execute("UPDATE purchase.history SET ordermenu = %s WHERE id = %s", (result, id))
     connection.commit()
     cur.close()
+
     return {"result": "success"}
 
 @app.get('/api/ordermenu/{id}')
 def orderMenu(id):
     id_int = int(id)
+
     cur = connection.cursor()
     cur.execute("SELECT * FROM purchase.history WHERE id = " + id)
     result = cur.fetchall()
     result = result[0][1]
     cur.close()
+
     res = []
     for i in range(len(result)):
         if result[i] != 0:
@@ -102,6 +113,7 @@ def orderMenu(id):
                 "amount": result[i],
                 "image": menu[i][7]
             })
+
     return res
 
 @app.get('/api/menu')
@@ -110,6 +122,7 @@ def get_menu():
     cur.execute("SELECT * FROM food.food")
     result = cur.fetchall()
     cur.close()
+
     res = []
     for i in result:
         res.append({
@@ -124,6 +137,7 @@ def get_menu():
             "image": i[7]
         })
     menu = res
+
     return res
 
 @app.get('/api/kind')
@@ -132,10 +146,12 @@ def get_kind():
     cur.execute("SELECT * FROM food.food")
     result = cur.fetchall()
     cur.close()
+
     res = []
     for i in result:
         res.append(i[5])
     res = {'kind': res}
+
     return res
 
 @app.get('/api/menu/{age}')
@@ -144,6 +160,7 @@ def get_recommend_menu(age):
     cur.execute("SELECT * FROM food.food WHERE recommendation = '" + age.upper() + "'")
     result = cur.fetchall()
     cur.close()
+
     res = []
     for i in result:
         res.append({
@@ -157,6 +174,7 @@ def get_recommend_menu(age):
             "selling": i[6],
             "image": i[7]
         })
+
     return res
 
 @app.get('/api/menukind/{kind}')
@@ -165,6 +183,7 @@ def get_kind_menu(kind):
     cur.execute("SELECT * FROM food.food WHERE kind = '" + kind + "'")
     result = cur.fetchall()
     cur.close()
+
     return result
 
 @app.get('/api/getfoodinfo/{id}')
@@ -173,6 +192,7 @@ def get_food_info(id):
     cur.execute("SELECT * FROM food.food WHERE id = " + id)
     result = cur.fetchall()
     cur.close()
+
     res = []
     for i in result:
         res.append({
@@ -186,6 +206,7 @@ def get_food_info(id):
             "selling": i[6],
             "image": i[7]
         })
+
     return res
 
 @app.get('/api/getfoodamount/{id}/{foodId}')
@@ -195,6 +216,7 @@ def get_food_info(id, foodId):
     cur.execute("SELECT * FROM purchase.history WHERE id = " + id)
     result = cur.fetchall()
     cur.close()
+
     return {"amount": result[0][1][foodid_int]}
 
 @app.get('/api/updown')
@@ -206,13 +228,20 @@ def updown():
     ageList = ['(0-2)', '(4-6)', '(8-12)', '(15-20)', '(25-32)', '(38-43)', '(48-53)', '(60-100)']
     print("Camera_Connected")
     face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
+
     # 0 for finish acting
     if isArduino:
         ser_conn = serial.Serial(ser, 9600)
+        while True:
+            ser_conn.write(str.encode('0'))
+            if ser_conn.readline().decode() == '0':
+                break
+            time.sleep(0.5)
         for _ in range(3):
             ser_conn.write(str.encode('3'))
             time.sleep(0.5)
         ser_conn.write(str.encode('1'))
+
     while True:
         ret, frame = capture.read()
         frame = cv2.rotate(frame, cv2.ROTATE_90_COUNTERCLOCKWISE)
