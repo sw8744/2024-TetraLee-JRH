@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 function First() {
     const navigate = useNavigate();
     const touch = () => {
-        fetch('http://127.0.0.1:5000/api/updown')
+        fetch('http://127.0.0.1:5000/api/updown', {mode: 'no-cors'})
         .then(response => response.json())
         .then(data => {
             console.log(data);

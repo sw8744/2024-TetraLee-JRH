@@ -232,7 +232,6 @@ def updown():
     # 0 for finish acting
     if isArduino:
         ser_conn = serial.Serial(ser, 9600)
-        time.sleep(2)
         ser_conn.write(str.encode('3'))
         ser_conn.write(str.encode('1'))
 

@@ -13,6 +13,7 @@ function Menu() {
     const id = searchParams.get('id');
     const [whereToEat, setWhereToEat] = useState('');
     const [orderMenu, setOrderMenu] = useState('');
+    const [clickedFood, setClickedFood] = useState('');
     const navigate = useNavigate();
 
     const fetchId = async () => {
@@ -53,6 +54,11 @@ function Menu() {
         navigate('/pay?id=' + id);
     }
 
+    const goDescription = (clickedFood) => {
+        clickedFood = clickedFood;
+        navigate('/description?id=' + id + '&clickedFood=' + clickedFood);
+    };
+
     useEffect(() => {
         fetchId();
         fetchKind();
@@ -78,6 +84,11 @@ function Menu() {
                         menu.selling === true
                         ? 'menu'
                         : 'menuSoldOut'
+                    }
+                    id={menu.id} onClick={
+                        menu.selling === true
+                        ? () => goDescription(menu.id)
+                        : null
                     }>
                         <img src={menu.image} alt={menu.name} className='menuImg'/>
                         <div className='menuName'>{menu.name}</div>
@@ -98,12 +109,8 @@ function Menu() {
                 ))}
             </div>
             <footer className='footer1'>
-                <button className='leftButton'>{'<'}</button>
-                <button className='rightButton'>{'>'}</button>
-            </footer>
-            <footer className='footer2'>
-                <button className='previousButton'>이전</button>
-                <button className='nextButton' onClick={goNext}>다음</button>
+                <button className='cancelButton'>주문 취소하기</button>
+                <button className='payButton' onClick={goNext}>결제하기</button>
             </footer>
         </>
     );

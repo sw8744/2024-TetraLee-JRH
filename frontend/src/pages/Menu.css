@@ -141,12 +141,26 @@
     margin-top: 15px;
 }
 
-.previousButton{
-    background-color: #C4C4C4;
+.footer1 {
+    margin-top: 5%;
+    height: 210px;
+}
+
+.payButton, .cancelButton {
     font-size: 500%;
     width: 100%;
     height: 100%;
     color: #493535;
+}
+
+.cancelButton {
+    background-color: #C4C4C4;
+}
+
+.payButton {
+    font-weight: bold;
+    background-color: #FFE7E7;
+    border-bottom: 1px solid #493535;
 }
 
 .amountDiv {
