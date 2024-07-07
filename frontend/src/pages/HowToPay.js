@@ -18,6 +18,10 @@ function HowToPay() {
         });
     };
 
+    const pay = () => {
+        navigate('/pay?id=' + id);
+    }
+
     const cancel = () => {
         navigate('/menu?id=' + id);
     };
@@ -30,7 +34,7 @@ function HowToPay() {
         <>
             <Header whereToEat={whereToEat}/>
             <div className="payButtonDiv">
-                <button className="payNow">바로 결제</button>
+                <button className="payNow" onClick={() => {pay()}}>바로 결제</button>
                 <button className="point">포인트 적립</button>
                 <button className="coupon">쿠폰 사용</button>
             </div>

@@ -110,10 +110,20 @@ def orderMenu(id):
                 "id": i,
                 "name": menu[i][1],
                 "amount": result[i],
-                "image": menu[i][7]
+                "image": menu[i][7],
+                "price": menu[i][3]
             })
 
     return res
+
+@app.post('/api/pay/{id}')
+def pay(id):
+    cur = connection.cursor()
+    cur.execute("UPDATE purchase.history SET ispaid = %s WHERE id = %s", (True, id))
+    connection.commit()
+    cur.close()
+
+    return {"result": "success"}
 
 @app.get('/api/menu')
 def get_menu():
@@ -218,7 +228,7 @@ def get_food_info(id, foodId):
 
     return {"amount": result[0][1][foodid_int]}
 
-@app.get('/api/updown')
+@app.post('/api/updown')
 def updown():
     prev_pos = ""
     ageProto = 'age_deploy.prototxt'
@@ -260,11 +270,20 @@ def updown():
 
                     age_pred = age[1:-1]
                     if age_pred in ['(0-2)', '(4-6)', '(8-12)']:
-                        return {"age": age_pred, "ageType": 'YOUNG'}
+                        cur = connection.cursor()
+                        cur.execute("UPDATE purchase.history SET age = %s WHERE id = %s", ("YOUNG", id))
+                        connection.commit()
+                        cur.close()
                     elif age_pred in ['(15-20)', '(25-32)', '(38-43)', '(48-53)']:
-                        return {"age": age_pred, "ageType": 'MIDDLE'}
+                        cur = connection.cursor()
+                        cur.execute("UPDATE purchase.history SET age = %s WHERE id = %s", ("MIDDLE", id))
+                        connection.commit()
+                        cur.close()
                     elif age_pred in ['(60-100)']:
-                        return {"age": age_pred, "ageType": 'OLD'}
+                        cur = connection.cursor()
+                        cur.execute("UPDATE purchase.history SET age = %s WHERE id = %s", ("OLD", id))
+                        connection.commit()
+                        cur.close()
                 return {"result": "success"}
         elif len(faces) == 0:
             if prev_pos != "error":
@@ -275,54 +294,6 @@ def updown():
             break
     # capture.release()
     # cv2.destroyAllWindows()
-
-@app.get('/api/age')
-def get_age():
-    capture = cv2.VideoCapture(0)
-    capture.set(cv2.CAP_PROP_FRAME_WIDTH, width)
-    capture.set(cv2.CAP_PROP_FRAME_HEIGHT, height)
-    print("Camera_Connected")
-    face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
-    ageProto = 'age_deploy.prototxt'
-    ageModel = 'age_net.caffemodel'
-    MODEL_MEAN_VALUES = (78.4263377603, 87.7689143744, 114.895847746)
-    ageList = ['(0-2)', '(4-6)', '(8-12)', '(15-20)', '(25-32)', '(38-43)', '(48-53)', '(60-100)']
-    max_time_end = time.time() + 3
-    ages = []
-    while True:
-        ret, frame = capture.read()
-        frame = cv2.rotate(frame, cv2.ROTATE_90_CLOCKWISE)
-        if not ret:
-            break
-        gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-        faces = face_cascade.detectMultiScale(gray, 1.3, 5, minSize=(20, 20))
-        x_f = 0; y_f = 0; w_f = 0; h_f = 0
-        for (x, y, w, h) in faces:
-            x_f = x; y_f = y; w_f = w; h_f = h
-            cv2.rectangle(frame, (x, y), (x + w, y + h), (255, 0, 0), 2)
-            cv2.circle(frame, (x + w // 2, y + h // 2), 5, (0, 0, 255), -1)
-            # print(x, y, w, h)
-        if len(faces) > 0:
-            for (x, y, w, h) in faces:
-                face_img = frame[y:y, h:h + w].copy()
-                blob = cv2.dnn.blobFromImage(frame, 1.0, (227, 227), MODEL_MEAN_VALUES, swapRB=False)
-                ageNet = cv2.dnn.readNet(ageModel, ageProto)
-                ageNet.setInput(blob)
-                agePreds = ageNet.forward()
-                age = ageList[agePreds[0].argmax()]
-                age_pred = age[1:-1]
-                if age_pred in ['(0-2)', '(4-6)', '(8-12)']:
-                    return {"age": age_pred, "ageType": 'YOUNG'}
-                elif age_pred in ['(15-20)', '(25-32)', '(38-43)', '(48-53)']:
-                    return {"age": age_pred, "ageType": 'MIDDLE'}
-                elif age_pred in ['(60-100)']:
-                    return {"age": age_pred, "ageType": 'OLD'}
-        elif len(faces) == 0:
-            print("Face Doesn't Exists")
-            raise HTTPException(404, "Face Doesn't Exists")
-        cv2.imshow('frame', frame)
-    capture.release()
-    cv2.destroyAllWindows()
 
 if __name__ == "__main__":
     import uvicorn

@@ -38,7 +38,7 @@
     
 }
 
-.buttonDiv {
+.yesNoButtonDiv {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -82,4 +82,27 @@
     text-align: center;
     font-weight: bold;
     color: #493535;
+}
+
+.footer3 {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    margin-top: 27.2%;
+}
+
+.cancelButton3 {
+    background-color: #C4C4C4;
+    color: #493535;
+    font-size: 450%;
+    padding: 10px;
+    margin-top: 50px;
+    margin-bottom: 50px;
+    width: 100%;
+    height: 210px;
+    align-self: center;
+    text-align: center;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
 }

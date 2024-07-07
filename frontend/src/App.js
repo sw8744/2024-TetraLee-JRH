@@ -6,6 +6,7 @@ import Second from './pages/Second'
 import Receipt from './pages/Receipt'
 import Description from './pages/Description';
 import HowToPay from './pages/HowToPay';
+import Pay from './pages/Pay';
 function App() {
   return (
     <Router>
@@ -15,6 +16,7 @@ function App() {
         <Route path="/wheretoeat" element={<Second />} />
         <Route path='/description' element={<Description />} />
         <Route path="/howtopay" element={<HowToPay />} />
+        <Route path="/pay" element={<Pay />} />
         <Route path="/receipt" element={<Receipt />} />
       </Routes>
     </Router>
