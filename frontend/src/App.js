@@ -7,6 +7,8 @@ import Receipt from './pages/Receipt'
 import Description from './pages/Description';
 import HowToPay from './pages/HowToPay';
 import Pay from './pages/Pay';
+import Point from './pages/Point';
+
 function App() {
   return (
     <Router>
@@ -17,6 +19,7 @@ function App() {
         <Route path='/description' element={<Description />} />
         <Route path="/howtopay" element={<HowToPay />} />
         <Route path="/pay" element={<Pay />} />
+        <Route path="/point" element={<Point />} />
         <Route path="/receipt" element={<Receipt />} />
       </Routes>
     </Router>

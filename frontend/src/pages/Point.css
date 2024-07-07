@@ -1,0 +1,78 @@
+.pointInfoDiv {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-top: 10px;
+    margin-bottom: 20px;
+}
+
+.pointInfoTitle, .pointInfoSubtitle {
+    color: #493535;
+    align-self: center;
+    text-align: center;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+
+.pointInfoTitle {
+    font-size: 600%;
+    font-weight: bold;
+}
+
+.pointInfoSubtitle {
+    font-size: 300%;
+    margin-top: -60px;
+}
+
+.pointSelectorDiv {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    margin-top: 10px;
+    margin-bottom: 20px;
+}
+
+.pointButton {
+    background-color: #C4C4C4;
+    color: #493535;
+    font-size: 200%;
+    font-weight: bold;
+    margin-top: 50px;
+    margin-left: 20px;
+    margin-right: 20px;
+    align-self: center;
+    text-align: center;
+    border: none;
+    padding: 20px;
+}
+
+.pointImg {
+    width: 200px;
+    height: 200px;
+    object-fit: contain;
+    margin-bottom: 10px;
+}
+
+.footer4 {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    margin-top: 33%;
+}
+
+.cancelButton4 {
+    background-color: #C4C4C4;
+    color: #493535;
+    font-size: 450%;
+    padding: 10px;
+    margin-top: 50px;
+    margin-bottom: 50px;
+    width: 100%;
+    height: 210px;
+    align-self: center;
+    text-align: center;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
