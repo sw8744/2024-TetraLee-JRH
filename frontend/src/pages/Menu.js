@@ -9,11 +9,13 @@ function Menu() {
     const [searchParams] = useSearchParams();
     const [menuKind, setMenuKind] = useState('');
     const [menu, setMenu] = useState('');
+    const [menuFinal, setMenuFinal] = useState(menu);
+    const [recommendMenu, setRecommendMenu] = useState('');
     const [clickedKind, setClickedKind] = useState('');
     const id = searchParams.get('id');
     const [whereToEat, setWhereToEat] = useState('');
     const [orderMenu, setOrderMenu] = useState('');
-    const [clickedFood, setClickedFood] = useState('');
+    const [age, setAge] = useState('');
     const navigate = useNavigate();
 
     const fetchId = async () => {
@@ -21,6 +23,16 @@ function Menu() {
         .then(response => response.json())
         .then(data => {
             setWhereToEat(data.wheretoeat);
+            setAge(data.age);
+        });
+    };
+
+    const fetchAge = async () => {
+        fetch('http://127.0.0.1:5000/api/getinfo/' + id)
+        .then(response => response.json())
+        .then(data => {
+            sleep(100);
+            setAge(data.age);
         });
     };
 
@@ -50,21 +62,83 @@ function Menu() {
         });
     }
 
+    const fetchRecommend = async () => {
+        fetch('http://127.0.0.1:5000/api/menu/' + age)
+        .then(response => response.json())
+        .then(data => {
+            setRecommendMenu(data);
+        });
+    };
+
+    const goPrevious = () => {
+        navigate('/');
+    }
+
     const goNext = () => {
         navigate('/pay?id=' + id);
     }
 
     const goDescription = (clickedFood) => {
-        clickedFood = clickedFood;
         navigate('/description?id=' + id + '&clickedFood=' + clickedFood);
     };
+
+    const setShowMenu = (clickedKind) => {
+        if (menu && clickedKind === '') {
+            setMenuFinal(menu);
+        } 
+        else if(recommendMenu && clickedKind === '추천') {
+            setMenuFinal(recommendMenu);
+        }
+        else if(menu){
+            let res = menu.filter((menu) => menu.kind === clickedKind);
+            setMenuFinal(res);
+        }
+        else {
+            setMenuFinal('');
+        }
+    }
+
+    const clickKind = (kind) => {
+        if(clickedKind === kind) {
+            setClickedKind('');
+            setShowMenu('');
+        }
+        else if(kind === '추천') {
+            setClickedKind(kind);
+            setShowMenu(kind);
+        }
+        else {
+            setClickedKind(kind);
+            setShowMenu(kind);
+        }
+    }
+
+    function sleep(ms) {
+        const wakeUpTime = Date.now() + ms;
+        while (Date.now() < wakeUpTime) {}
+    }
 
     useEffect(() => {
         fetchId();
         fetchKind();
         fetchMenu();
         fetchOrderMenu();
+
     }, []);
+
+    useEffect(() => {
+        fetchAge();
+    }, [whereToEat]);
+
+    useEffect(() => {
+        if(age !== '') {
+            fetchRecommend();
+        }
+    }, [whereToEat, age]);
+    
+    useEffect(() => {
+        setShowMenu(clickedKind);
+    }, [whereToEat, age, recommendMenu]);
 
     return (
         <>
@@ -75,11 +149,11 @@ function Menu() {
                     clickedKind === menu
                     ? 'menuKindButtonClicked'
                     : 'menuKindButton'
-                } onClick={() => {setClickedKind(menu)}}>{menu}</button>
+                } onClick={() => clickKind(menu)}>{menu}</button>
             ))}
             </div>
             <div className='menuSelector'>
-                {menu && menu.map((menu) => (
+                {menuFinal && menuFinal.map((menu) => (
                     <div className={
                         menu.selling === true
                         ? 'menu'
@@ -110,7 +184,7 @@ function Menu() {
                 ))}
             </div>
             <footer className='footer1'>
-                <button className='cancelButton'>주문 취소하기</button>
+                <button className='cancelButton' onClick={goPrevious}>주문 취소하기</button>
                 <button className='payButton' onClick={goNext}>결제하기</button>
             </footer>
         </>

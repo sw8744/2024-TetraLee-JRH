@@ -76,7 +76,7 @@ def get_info(id):
     result = result[0]
     cur.close()
 
-    return {"id": result[0], "ordermenu": result[1], "ispaid": result[2], "date": result[3], "wheretoeat": result[4]}
+    return {"id": result[0], "ordermenu": result[1], "ispaid": result[2], "date": result[3], "wheretoeat": result[4], "age": result[5]}
 
 @app.post('/api/order/{id}/{menuId}/{amount}')
 def order(id, menuId, amount):
@@ -89,7 +89,7 @@ def order(id, menuId, amount):
     result = cur.fetchall()
     print(result)
     result = result[0][1]
-    result[menu_id - 1] += int(amount)
+    result[menu_id - 1] = int(amount)
     cur.execute("UPDATE purchase.history SET ordermenu = %s WHERE id = %s", (result, id))
     connection.commit()
     cur.close()
