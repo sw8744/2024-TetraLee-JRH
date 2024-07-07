@@ -84,10 +84,8 @@ def order(id, menuId, amount):
     menu_id = int(menuId)
 
     cur = connection.cursor()
-    print(id)
     cur.execute("SELECT * FROM purchase.history WHERE id = " + id + "ORDER BY id")
     result = cur.fetchall()
-    print(result)
     result = result[0][1]
     result[menu_id - 1] = int(amount)
     cur.execute("UPDATE purchase.history SET ordermenu = %s WHERE id = %s", (result, id))

@@ -75,7 +75,7 @@ function Menu() {
     }
 
     const goNext = () => {
-        navigate('/pay?id=' + id);
+        navigate('/howtopay?id=' + id);
     }
 
     const goDescription = (clickedFood) => {
