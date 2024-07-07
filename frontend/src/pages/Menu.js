@@ -9,7 +9,7 @@ function Menu() {
     const [searchParams] = useSearchParams();
     const [menuKind, setMenuKind] = useState('');
     const [menu, setMenu] = useState('');
-    const [clickedKind, setClickedKind] = useState('추천');
+    const [clickedKind, setClickedKind] = useState('');
     const id = searchParams.get('id');
     const [whereToEat, setWhereToEat] = useState('');
     const [orderMenu, setOrderMenu] = useState('');
@@ -102,7 +102,8 @@ function Menu() {
             </div>
             <div className='orderSelector'>
                 {orderMenu && orderMenu.map((menu) => (
-                        <div className='orderMenu'>
+                        <div className='orderMenu'
+                        id={menu.id} onClick={() => goDescription(menu.id + 1)}>
                             <img src={menu.image} alt={menu.name} className='orderImg'/>
                             <div className='orderName'>{menu.name} × {menu.amount}</div>
                     </div>

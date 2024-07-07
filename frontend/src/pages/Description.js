@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 
 function Description() {
     const [searchParams] = useSearchParams();
-    const id = searchParams.get('id');
+    var id = searchParams.get('id');
     const clickedFood = searchParams.get('clickedFood');
     const [whereToEat, setWhereToEat] = useState('');
     const [info, setInfo] = useState('');
@@ -47,16 +47,17 @@ function Description() {
     };
 
     const order = async () => {
-        fetch('http://127.0.0.1/api/order/' + id + '/' + clickedFood + '/' + amount,
+        id = Number(id);
+        id = String(id);
+        fetch('http://127.0.0.1:5000/api/order/' + id + '/' + clickedFood + '/' + amount,
          {
             method: 'POST'
          }
-        )
-        .then(response => response.json())
-        .then(data => {
-            // console.log(data);
-        });
+        );
+        navigate('/menu?id=' + id);
+    };
 
+    const cancel = () => {
         navigate('/menu?id=' + id);
     };
 
@@ -90,10 +91,10 @@ function Description() {
                     <p className='amount'>{amount}</p>
                     <button className='plusButton' onClick={plusAmount}>+</button>
                 </div>
-                <button className='orderButton' onClick={order}>주문하기</button>
             </div>
-            <footer className='footer2'>
-                <button className='previousButton'>이전으로</button>
+            <footer className='footer1'>
+                <button className='cancelButton' onClick={() => {cancel()}}>이전으로</button>
+                <button className='payButton' onClick={() => {order()}}>주문하기</button>
             </footer>
         </div>
     );

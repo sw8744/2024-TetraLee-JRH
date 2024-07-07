@@ -5,7 +5,8 @@ function Second() {
     const navigate = useNavigate();
 
     const fetchWhereToEat = async (whereToEat) => {
-        let result = await fetch('http://127.0.0.1:5000/api/start/eatIn').then(response => response.json());
+        let result = await fetch('http://127.0.0.1:5000/api/start/' + whereToEat)
+        .then(response => response.json());
         console.log(result)
         return result.order_num;
     }

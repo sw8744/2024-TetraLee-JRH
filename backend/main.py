@@ -37,7 +37,7 @@ connection = psycopg2.connect(
 print("DB_Connected")
 
 c = connection.cursor()
-c.execute("SELECT * FROM food.food")
+c.execute("SELECT * FROM food.food ORDER BY id")
 menu = c.fetchall()
 c.close()
 print(menu)
@@ -54,7 +54,7 @@ def start(whereToEat):
         where = "매장"
 
     cur = connection.cursor()
-    cur.execute("SELECT * FROM purchase.history")
+    cur.execute("SELECT * FROM purchase.history ORDER BY id")
     result = cur.fetchall()
 
     num = len(result) + 1
@@ -71,7 +71,7 @@ def get_info(id):
     id_int = int(id)
 
     cur = connection.cursor()
-    cur.execute("SELECT * FROM purchase.history WHERE id = " + id)
+    cur.execute("SELECT * FROM purchase.history WHERE id = " + id + "ORDER BY id")
     result = cur.fetchall()
     result = result[0]
     cur.close()
@@ -84,8 +84,10 @@ def order(id, menuId, amount):
     menu_id = int(menuId)
 
     cur = connection.cursor()
-    cur.execute("SELECT * FROM purchase.history WHERE id = " + id)
+    print(id)
+    cur.execute("SELECT * FROM purchase.history WHERE id = " + id + "ORDER BY id")
     result = cur.fetchall()
+    print(result)
     result = result[0][1]
     result[menu_id - 1] += int(amount)
     cur.execute("UPDATE purchase.history SET ordermenu = %s WHERE id = %s", (result, id))
@@ -97,9 +99,8 @@ def order(id, menuId, amount):
 @app.get('/api/ordermenu/{id}')
 def orderMenu(id):
     id_int = int(id)
-
     cur = connection.cursor()
-    cur.execute("SELECT * FROM purchase.history WHERE id = " + id)
+    cur.execute("SELECT * FROM purchase.history WHERE id = " + id + "ORDER BY id")
     result = cur.fetchall()
     result = result[0][1]
     cur.close()
@@ -108,7 +109,7 @@ def orderMenu(id):
     for i in range(len(result)):
         if result[i] != 0:
             res.append({
-                "id": i + 1,
+                "id": i,
                 "name": menu[i][1],
                 "amount": result[i],
                 "image": menu[i][7]
@@ -119,7 +120,7 @@ def orderMenu(id):
 @app.get('/api/menu')
 def get_menu():
     cur = connection.cursor()
-    cur.execute("SELECT * FROM food.food")
+    cur.execute("SELECT * FROM food.food ORDER BY id")
     result = cur.fetchall()
     cur.close()
 
@@ -143,7 +144,7 @@ def get_menu():
 @app.get('/api/kind')
 def get_kind():
     cur = connection.cursor()
-    cur.execute("SELECT * FROM food.food")
+    cur.execute("SELECT * FROM food.food ORDER BY id")
     result = cur.fetchall()
     cur.close()
 
@@ -157,7 +158,7 @@ def get_kind():
 @app.get('/api/menu/{age}')
 def get_recommend_menu(age):
     cur = connection.cursor()
-    cur.execute("SELECT * FROM food.food WHERE recommendation = '" + age.upper() + "'")
+    cur.execute("SELECT * FROM food.food WHERE recommendation = '" + age.upper() + "'" + "ORDER BY id")
     result = cur.fetchall()
     cur.close()
 
@@ -180,7 +181,7 @@ def get_recommend_menu(age):
 @app.get('/api/menukind/{kind}')
 def get_kind_menu(kind):
     cur = connection.cursor()
-    cur.execute("SELECT * FROM food.food WHERE kind = '" + kind + "'")
+    cur.execute("SELECT * FROM food.food WHERE kind = '" + kind + "'" + "ORDER BY id")
     result = cur.fetchall()
     cur.close()
 
@@ -189,7 +190,7 @@ def get_kind_menu(kind):
 @app.get('/api/getfoodinfo/{id}')
 def get_food_info(id):
     cur = connection.cursor()
-    cur.execute("SELECT * FROM food.food WHERE id = " + id)
+    cur.execute("SELECT * FROM food.food WHERE id = " + id + "ORDER BY id")
     result = cur.fetchall()
     cur.close()
 
@@ -211,9 +212,9 @@ def get_food_info(id):
 
 @app.get('/api/getfoodamount/{id}/{foodId}')
 def get_food_info(id, foodId):
-    foodid_int = int(foodId)
+    foodid_int = int(foodId) - 1
     cur = connection.cursor()
-    cur.execute("SELECT * FROM purchase.history WHERE id = " + id)
+    cur.execute("SELECT * FROM purchase.history WHERE id = " + id + "ORDER BY id")
     result = cur.fetchall()
     cur.close()
 
