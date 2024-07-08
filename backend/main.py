@@ -244,21 +244,21 @@ def updown():
         while True:
             ser_conn.write(str.encode('0'))
             if ser_conn.readable():
-                res = ser_conn.readline()
-                if res == b'0':
+                res = ser_conn.readline().decode('utf-8')
+                if res == '0':
                     break
             time.sleep(0.1)
         ser_conn.write(str.encode('3'))
         while True:
             if ser_conn.readable():
-                res = ser_conn.readline()
-                if res == b'0':
+                res = ser_conn.readline().decode('utf-8')
+                if res == '0':
                     break
         ser_conn.write(str.encode('1'))
         while True:
             if ser_conn.readable():
-                res = ser_conn.readline()
-                if res == b'0':
+                res = ser_conn.readline().decode('utf-8')
+                if res == '0':
                     break
 
     while True:
