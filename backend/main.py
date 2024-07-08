@@ -245,10 +245,10 @@ def updown():
             if ser_conn.readable():
                 ser_conn.write(str.encode('3'))
                 print("Serial Wrote 3")
-                print(ser_conn.readline())
-                time.sleep(2)
                 if str(ser_conn.readline()) == b'0\r\n':
                     break
+                time.sleep(2)
+
         ser_conn.write(str.encode('1'))
         print("Serial Wrote 1")
     print("Camera_Connected")
