@@ -22,6 +22,8 @@ isArduino = False
 if input("Do you want to use Arduino? (y/n): ") == 'y':
     isArduino = True
     ser = input("Enter the serial port: ")
+    ser_conn = serial.Serial(ser, 9600)
+    time.sleep(2)
 
 capture = cv2.VideoCapture(0)
 capture.set(cv2.CAP_PROP_FRAME_WIDTH, width)
@@ -239,7 +241,6 @@ def updown():
 
     # 0 for finish acting
     if isArduino:
-        ser_conn = serial.Serial(ser, 9600)
         while True:
             ser_conn.write(str.encode('0'))
             if ser_conn.readable():
