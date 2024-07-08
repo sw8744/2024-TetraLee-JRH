@@ -242,7 +242,7 @@ def updown():
     if isArduino:
         ser_conn = serial.Serial(ser, 9600)
         while True:
-            ser.conn.write(str.encode('0'))
+            ser_conn.write(str.encode('0'))
             if ser_conn.readable():
                 res = ser_conn.readline()
                 if res == b'0':
