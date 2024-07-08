@@ -235,7 +235,6 @@ def updown():
     ageModel = 'age_net.caffemodel'
     MODEL_MEAN_VALUES = (78.4263377603, 87.7689143744, 114.895847746)
     ageList = ['(0-2)', '(4-6)', '(8-12)', '(15-20)', '(25-32)', '(38-43)', '(48-53)', '(60-100)']
-    print("Camera_Connected")
     face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
 
     # 0 for finish acting
@@ -255,12 +254,7 @@ def updown():
                 if res == '0':
                     break
         ser_conn.write(str.encode('1'))
-        while True:
-            if ser_conn.readable():
-                res = ser_conn.readline().decode('utf-8')
-                if res == '0':
-                    break
-
+    print("Camera_Connected")
     while True:
         ret, frame = capture.read()
         frame = cv2.rotate(frame, cv2.ROTATE_90_COUNTERCLOCKWISE)
