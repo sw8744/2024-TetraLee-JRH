@@ -243,18 +243,21 @@ def updown():
         time.sleep(2)
         while True:
             ser_conn.write(str.encode('0'))
+            time.sleep(2)
             if ser_conn.readable():
                 res = ser_conn.readline().decode('utf-8')
                 if res == '0':
                     break
             time.sleep(0.1)
         ser_conn.write(str.encode('3'))
+        time.sleep(2)
         while True:
             if ser_conn.readable():
                 res = ser_conn.readline().decode('utf-8')
                 if res == '0':
                     break
         ser_conn.write(str.encode('1'))
+        time.sleep(2)
     print("Camera_Connected")
     while True:
         ret, frame = capture.read()
