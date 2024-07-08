@@ -241,13 +241,15 @@ def updown():
     if isArduino:
         ser_conn = serial.Serial(ser, 9600)
         time.sleep(2)
-        if(ser_conn.readable()):
-            ser_conn.write(str.encode('3'))
-            print("Serial Writed 3")
-        time.sleep(2)
-        ser_conn.write(str.encode('1'))
-        print("Serial Writed 1")
-        time.sleep(2)
+        while True:
+            if(ser_conn.readable()):
+                ser_conn.write(str.encode('3'))
+                print("Serial Writed 3")
+                time.sleep(2)
+                ser_conn.write(str.encode('1'))
+                print("Serial Writed 1")
+                time.sleep(2)
+                break
     print("Camera_Connected")
     while True:
         ret, frame = capture.read()
