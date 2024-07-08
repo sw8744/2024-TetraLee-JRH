@@ -242,18 +242,11 @@ def updown():
         ser_conn = serial.Serial(ser, 9600)
         time.sleep(2)
         if ser_conn.readable():
-            while True:
-                ser_conn.write(b'3')
-                print("Serial Wrote 3")
-                res = ser_conn.readline()
-                print(res)
-                if str(res) == "b'0\\r\\n'":
-                    ser_conn = serial.Serial(ser, 9600)
-                    time.sleep(2)
-                    ser_conn.write(str.encode('1'))
-                    print("Serial Wrote 1")
-                    break
-                time.sleep(2)
+            ser_conn.write(str.encode('3'))
+            print("Serial Wrote 3")
+            time.sleep(8)
+            ser_conn.write(str.encode('1'))
+            print("Serial Wrote 1")
     print("Camera_Connected")
     while True:
         ret, frame = capture.read()
