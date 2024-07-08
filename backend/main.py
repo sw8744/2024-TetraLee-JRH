@@ -247,7 +247,7 @@ def updown():
                 print("Serial Wrote 3")
                 print(ser_conn.readline())
                 time.sleep(2)
-                if ser_conn.readline() == b'0':
+                if str(ser_conn.readline()) == "b'0'\r\n":
                     break
         ser_conn.write(str.encode('1'))
         print("Serial Wrote 1")
