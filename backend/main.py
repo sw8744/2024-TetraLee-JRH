@@ -228,7 +228,7 @@ def get_food_info(id, foodId):
 
     return {"amount": result[0][1][foodid_int]}
 
-@app.post('/api/updown')
+@app.get('/api/updown')
 def updown():
     prev_pos = ""
     ageProto = 'age_deploy.prototxt'
