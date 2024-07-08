@@ -248,10 +248,12 @@ def updown():
                 res = ser_conn.readline()
                 print(res)
                 if str(res) == "b'0\\r\\n'":
+                    ser_conn.write(str.encode('1'))
+                    print("Serial Wrote 1")
+                    time.sleep(2)
                     break
                 time.sleep(2)
-            ser_conn.write(str.encode('1'))
-            print("Serial Wrote 1")
+
     print("Camera_Connected")
     while True:
         ret, frame = capture.read()
