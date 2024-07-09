@@ -17,34 +17,31 @@ void loop() {
       Serial.println('0');
     }
     else if(val == '1') {
-        for(long int i=0; i<100000; i++) {
-          char val2 = Serial.read();
-          if(val2 == '2') {
-            Serial.println('0');
-            break;
-          }
-          digitalWrite(DIR, HIGH);
+      long int move = step;
+      for(long int i=0; i<move; i++) {
+          digitalWrite(DIR, LOW);
           digitalWrite(ENA, HIGH);
           digitalWrite(PUL, HIGH);
           delayMicroseconds(50);
           digitalWrite(PUL, LOW);
           delayMicroseconds(50);
-          steps++;
-          // Serial.println(steps);
+          steps--;
         }
-      }
-  if(val == '3') {
-      long int move = steps;
-      for(long int i=0; i<move; i++) {
-        digitalWrite(DIR, LOW);
+      for(long int i=0; i<100000; i++) {
+        char val2 = Serial.read();
+        if(val2 == '2') {
+          Serial.println('0');
+          break;
+        }
+        digitalWrite(DIR, HIGH);
         digitalWrite(ENA, HIGH);
         digitalWrite(PUL, HIGH);
         delayMicroseconds(50);
         digitalWrite(PUL, LOW);
         delayMicroseconds(50);
-        steps--;
+        steps++;
+        // Serial.println(steps);
       }
-      Serial.println('0');
     }
-  }  
+  } 
 }
