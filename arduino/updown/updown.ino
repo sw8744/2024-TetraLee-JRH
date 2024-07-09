@@ -26,6 +26,7 @@ void loop() {
           digitalWrite(PUL, LOW);
           delayMicroseconds(50);
           steps--;
+          Serial.println(steps);
         }
       for(long int i=0; i<100000; i++) {
         char val2 = Serial.read();
@@ -40,8 +41,9 @@ void loop() {
         digitalWrite(PUL, LOW);
         delayMicroseconds(50);
         steps++;
-        // Serial.println(steps);
+        Serial.println(steps);
       }
+      Serial.println(steps);
     }
   } 
 }
