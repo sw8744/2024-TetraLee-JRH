@@ -1,4 +1,4 @@
-export const getSpeech = (text) => {
+const getSpeech = (text) => {
     let voices = [];
     const setVoiceList = () => {
       voices = window.speechSynthesis.getVoices();
@@ -31,3 +31,5 @@ export const getSpeech = (text) => {
   
     speech(text);
   };
+
+  export default getSpeech;
