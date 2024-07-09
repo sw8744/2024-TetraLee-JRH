@@ -60,7 +60,7 @@ def start(whereToEat):
     cur.execute("SELECT * FROM purchase.history ORDER BY id")
     result = cur.fetchall()
 
-    num = len(result) + 1
+    num = len(result)
     ordermenu = [0 for _ in range(len(menu))]
 
     cur.execute("UPDATE purchase.history SET (ordermenu, ispaid, date, wheretoeat) VALUES (%s, %s, %s, %s) WHERE id = %s", (ordermenu, False, time.strftime('%Y-%m-%d %H:%M:%S'), where, num))
