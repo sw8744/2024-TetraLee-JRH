@@ -263,7 +263,6 @@ def updown():
                 ser_conn.write(str.encode('2'))
                 time.sleep(0.5)
                 for (x, y, w, h) in faces:
-
                     face_img = frame[y:y, h:h + w].copy()
                     blob = cv2.dnn.blobFromImage(frame, 1.0, (227, 227), MODEL_MEAN_VALUES, swapRB=False)
                     ageNet = cv2.dnn.readNet(ageModel, ageProto)
@@ -278,14 +277,18 @@ def updown():
                     ordermenu = [0 for _ in range(len(menu))]
                     age_pred = age[1:-1]
                     cur = connection.cursor()
-                    if age_pred in ['(0-2)', '(4-6)', '(8-12)']:
-                        cur.execute("INSERT INTO purchase.history (id, age) VALUES (%s, 'YOUNG')", (num, ))
-                    elif age_pred in ['(15-20)', '(25-32)', '(38-43)', '(48-53)']:
-                        cur.execute("INSERT INTO purchase.history (id, age) VALUES (%s, 'MIDDLE')", (num, ))
-                    elif age_pred in ['(60-100)']:
-                        cur.execute("INSERT INTO purchase.history (id, age) VALUES (%s, 'OLD')", (num, ))
-                    connection.commit()
-                    cur.close()
+                    try:
+                        cur = connection.cursor()
+                        if age_pred in ['(0-2)', '(4-6)', '(8-12)']:
+                            cur.execute("INSERT INTO purchase.history (id, age) VALUES (%s, 'YOUNG')", (num,))
+                        elif age_pred in ['(15-20)', '(25-32)', '(38-43)', '(48-53)']:
+                            cur.execute("INSERT INTO purchase.history (id, age) VALUES (%s, 'MIDDLE')", (num,))
+                        elif age_pred in ['(60-100)']:
+                            cur.execute("INSERT INTO purchase.history (id, age) VALUES (%s, 'OLD')", (num,))
+                        connection.commit()
+                        cur.close()
+                    except Exception as e:
+                        print("Database insertion error:", str(e))
                     print("age: " + age_pred)
                 return {"result": "success"}
         elif len(faces) == 0:
