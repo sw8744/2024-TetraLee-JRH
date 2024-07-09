@@ -278,12 +278,15 @@ def updown():
                     age_pred = age[1:-1]
                     try:
                         cur = connection.cursor()
-                        if age_pred in ["(0-2)", "(4-6)", "(8-12)"]:
+                        if age_pred in ["0-2", "4-6", "8-12"]:
                             cur.execute("INSERT INTO purchase.history (id, age) VALUES (%s, 'YOUNG')", (num,))
-                        elif age_pred in ["(15-20)", "(25-32)", "(38-43)", "(48-53)"]:
+                            print("YOUNG")
+                        elif age_pred in ["15-20", "25-32", "38-43", "48-53"]:
                             cur.execute("INSERT INTO purchase.history (id, age) VALUES (%s, 'MIDDLE')", (num,))
-                        elif age_pred in ["(60-100)"]:
+                            print("MIDDLE")
+                        elif age_pred in ["60-100"]:
                             cur.execute("INSERT INTO purchase.history (id, age) VALUES (%s, 'OLD')", (num,))
+                            print("OLD")
                         connection.commit()
                         cur.close()
                     except Exception as e:
