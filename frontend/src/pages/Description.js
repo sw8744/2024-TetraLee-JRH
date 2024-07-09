@@ -11,7 +11,7 @@ function Description() {
     const clickedFood = searchParams.get('clickedFood');
     const [whereToEat, setWhereToEat] = useState('');
     const [info, setInfo] = useState('');
-    const [amount, setAmount] = useState(1);
+    const [amount, setAmount] = useState(0);
 
     const navigate = useNavigate();
 
@@ -36,10 +36,7 @@ function Description() {
         fetch('http://127.0.0.1:5000/api/getfoodamount/' + id + '/' + clickedFood)
         .then(response => response.json())
         .then(data => {
-            if(data.amount != 0)
-                setAmount(data.amount);
-            else
-                setAmount(1);
+            setAmount(data.amount);
         });
     };
 
