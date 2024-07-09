@@ -242,9 +242,6 @@ def updown():
         ser_conn = serial.Serial(ser, 9600)
         time.sleep(2)
         if ser_conn.readable():
-            ser_conn.write(str.encode('3'))
-            print("Serial Wrote 3")
-            time.sleep(8)
             ser_conn.write(str.encode('1'))
             print("Serial Wrote 1")
     print("Camera_Connected")
