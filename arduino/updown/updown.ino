@@ -17,7 +17,7 @@ void loop() {
       Serial.println('0');
     }
     else if(val == '1') {
-      long int move = step;
+      long int move = steps;
       for(long int i=0; i<move; i++) {
           digitalWrite(DIR, LOW);
           digitalWrite(ENA, HIGH);
