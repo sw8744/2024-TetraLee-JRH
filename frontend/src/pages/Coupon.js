@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import Header from "./Header";
 import './Coupon.css';
+import getSpeech from "../util/GetSpeech";
 
 function Coupon() {
     const [searchParams] = useSearchParams();
@@ -27,6 +28,7 @@ function Coupon() {
 
     useEffect(() => {
         fetchId();
+        getSpeech('쿠폰을 단말기에 인식시켜 주세요.')
     }, []);
 
     return (

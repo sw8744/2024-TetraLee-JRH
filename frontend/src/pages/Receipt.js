@@ -3,6 +3,7 @@ import { useState } from 'react';
 import Header from './Header';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useEffect } from 'react';
+import getSpeech from '../util/GetSpeech';
 
 function Receipt() {
     const [number, setNumber] = useState(0);
@@ -21,11 +22,13 @@ function Receipt() {
     };
 
     const moveToMain = () => {
+        getSpeech('감사합니다.');
         nagivate('/');
     };
 
     useEffect(() => {
         fetchId();
+        getSpeech('결제가 완료되었습니다. 영수증을 출력하시겠습니까?')
     }, []);
 
     return (

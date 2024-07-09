@@ -3,6 +3,7 @@ import { useSearchParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useNavigate } from 'react-router-dom';
 import './HowToPay.css';
+import getSpeech from "../util/GetSpeech";
 
 function HowToPay() {
     const [searchParams] = useSearchParams();
@@ -36,6 +37,7 @@ function HowToPay() {
 
     useEffect(() => {
         fetchId();
+        getSpeech('결제 방법을 선택해주세요.');
     }, []);
 
     return (

@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import './Menu.css';
 import Header from './Header';
 import { useNavigate } from 'react-router-dom';
+import getSpeech from '../util/GetSpeech';
 
 
 function Menu() {
@@ -123,7 +124,7 @@ function Menu() {
         fetchKind();
         fetchMenu();
         fetchOrderMenu();
-
+        getSpeech('메뉴를 선택해주세요.');
     }, []);
 
     useEffect(() => {

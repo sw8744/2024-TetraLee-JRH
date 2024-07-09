@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import Header from "./Header";
 import './Pay.css';
+import getSpeech from "../util/GetSpeech";
 
 function Pay() {
   const [searchParams] = useSearchParams();
@@ -38,6 +39,7 @@ function Pay() {
   useEffect(() => {
     fetchId();
     fetchOrderMenu();
+    getSpeech('카드 단말기에 카드를 넣어주세요.');
   }, []);
 
   return (

@@ -3,6 +3,7 @@ import { useSearchParams } from 'react-router-dom';
 import Header from './Header';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import getSpeech from '../util/GetSpeech';
 
 function Description() {
     const [searchParams] = useSearchParams();
@@ -10,7 +11,7 @@ function Description() {
     const clickedFood = searchParams.get('clickedFood');
     const [whereToEat, setWhereToEat] = useState('');
     const [info, setInfo] = useState('');
-    const [amount, setAmount] = useState(0);
+    const [amount, setAmount] = useState(1);
 
     const navigate = useNavigate();
 
@@ -27,6 +28,7 @@ function Description() {
         .then(response => response.json())
         .then(data => {
             setInfo(data[0]);
+            getSpeech(data[0].name + '의 설명입니다.');
         });
     }
 
@@ -34,7 +36,10 @@ function Description() {
         fetch('http://127.0.0.1:5000/api/getfoodamount/' + id + '/' + clickedFood)
         .then(response => response.json())
         .then(data => {
-            setAmount(data.amount);
+            if(data.amount != 0)
+                setAmount(data.amount);
+            else
+                setAmount(1);
         });
     };
 

@@ -9,6 +9,7 @@ import LPoint from './points/LPoint.png';
 import OKCashbag from './points/OKCashbag.jpg';
 import SinsegaePoint from './points/SinsegaePoint.png';
 import './Point.css';
+import getSpeech from '../util/GetSpeech';
 
 function Point() {
     const [searchParams] = useSearchParams();
@@ -34,6 +35,7 @@ function Point() {
 
     useEffect(() => {
         fetchId();
+        getSpeech('포인트 적립을 시작합니다.')
     }, []);
 
   return (

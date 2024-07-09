@@ -24,15 +24,11 @@ function Second() {
     };
 
     useEffect(() => {
-        setLoad(true);
+        getSpeech('포장 또는 매장 중 하나를 선택해주세요.');
+        return () => {
+            setLoad(true);
+        };
     }, []);
-
-    useEffect(() => {
-        if(!isSpeech) {
-            getSpeech('포장 또는 매장 중 하나를 선택해주세요.');
-            setIsSpeech(true);
-        }
-    }, [load]);
 
     return (
         <div className='total'>
