@@ -276,14 +276,13 @@ def updown():
                     num = len(result) + 1
                     ordermenu = [0 for _ in range(len(menu))]
                     age_pred = age[1:-1]
-                    cur = connection.cursor()
                     try:
                         cur = connection.cursor()
-                        if age_pred in ['(0-2)', '(4-6)', '(8-12)']:
+                        if age_pred in ["(0-2)", "(4-6)", "(8-12)"]:
                             cur.execute("INSERT INTO purchase.history (id, age) VALUES (%s, 'YOUNG')", (num,))
-                        elif age_pred in ['(15-20)', '(25-32)', '(38-43)', '(48-53)']:
+                        elif age_pred in ["(15-20)", "(25-32)", "(38-43)", "(48-53)"]:
                             cur.execute("INSERT INTO purchase.history (id, age) VALUES (%s, 'MIDDLE')", (num,))
-                        elif age_pred in ['(60-100)']:
+                        elif age_pred in ["(60-100)"]:
                             cur.execute("INSERT INTO purchase.history (id, age) VALUES (%s, 'OLD')", (num,))
                         connection.commit()
                         cur.close()
