@@ -288,6 +288,7 @@ def updown():
                         cur.execute("INSERT INTO purchase.history (id, age) VALUES (%s, %s)", (num, 'OLD'))
                         connection.commit()
                         cur.close()
+                    print("age: " + age_pred)
                 return {"result": "success"}
         elif len(faces) == 0:
             if prev_pos != "error":
