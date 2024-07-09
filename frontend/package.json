@@ -8,8 +8,10 @@
     "@testing-library/user-event": "^13.2.1",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
+    "react-native-tts": "^4.1.1",
     "react-router-dom": "^6.23.1",
     "react-scripts": "^5.0.1",
+    "speak-tts": "^2.0.8",
     "web-vitals": "^2.1.0"
   },
   "scripts": {
