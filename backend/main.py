@@ -276,23 +276,28 @@ def updown():
                     num = len(result) + 1
                     ordermenu = [0 for _ in range(len(menu))]
                     age_pred = age[1:-1]
+                    age_enum = ''
                     try:
                         cur = connection.cursor()
                         if age_pred in ["0-2", "4-6", "8-12"]:
                             cur.execute("INSERT INTO purchase.history (id, age) VALUES (%s, 'YOUNG')", (num,))
+                            age_enum = "YOUNG"
                             print("YOUNG")
                         elif age_pred in ["15-20", "25-32", "38-43", "48-53"]:
                             cur.execute("INSERT INTO purchase.history (id, age) VALUES (%s, 'MIDDLE')", (num,))
+                            age_enum = "MIDDLE"
                             print("MIDDLE")
                         elif age_pred in ["60-100"]:
                             cur.execute("INSERT INTO purchase.history (id, age) VALUES (%s, 'OLD')", (num,))
+                            age_enum = "OLD"
                             print("OLD")
                         connection.commit()
                         cur.close()
+                        print("age: " + age_pred)
+                        return {"age": age_pred, "age_enum": age_enum}
                     except Exception as e:
                         print("Database insertion error:", str(e))
-                    print("age: " + age_pred)
-                return {"result": "success"}
+                        return {"result": "failed"}
         elif len(faces) == 0:
             if prev_pos != "error":
                 prev_pos = "error"
