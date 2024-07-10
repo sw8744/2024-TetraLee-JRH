@@ -283,11 +283,11 @@ def updown():
                             cur.execute("INSERT INTO purchase.history (id, age) VALUES (%s, 'YOUNG')", (num,))
                             age_enum = "YOUNG"
                             print("YOUNG")
-                        elif age_pred in ["15-20", "25-32", "38-43", "48-53"]:
+                        elif age_pred in ["15-20", "25-32", "38-43"]:
                             cur.execute("INSERT INTO purchase.history (id, age) VALUES (%s, 'MIDDLE')", (num,))
                             age_enum = "MIDDLE"
                             print("MIDDLE")
-                        elif age_pred in ["60-100"]:
+                        elif age_pred in ["48-53", "60-100"]:
                             cur.execute("INSERT INTO purchase.history (id, age) VALUES (%s, 'OLD')", (num,))
                             age_enum = "OLD"
                             print("OLD")
