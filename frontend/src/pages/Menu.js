@@ -20,7 +20,7 @@ function Menu() {
     const navigate = useNavigate();
 
     const fetchId = async () => {
-        fetch('http://127.0.0.1:5000/api/getinfo/' + id)
+        await fetch('http://127.0.0.1:5000/api/getinfo/' + id)
         .then(response => response.json())
         .then(data => {
             setWhereToEat(data.wheretoeat);
@@ -29,7 +29,7 @@ function Menu() {
     };
 
     const fetchAge = async () => {
-        fetch('http://127.0.0.1:5000/api/getinfo/' + id)
+        await fetch('http://127.0.0.1:5000/api/getinfo/' + id)
         .then(response => response.json())
         .then(data => {
             sleep(100);
@@ -38,7 +38,7 @@ function Menu() {
     };
 
     const fetchOrderMenu = async () => {
-        fetch('http://127.0.0.1:5000/api/ordermenu/' + id)
+        await fetch('http://127.0.0.1:5000/api/ordermenu/' + id)
         .then(response => response.json())
         .then(data => {
             setOrderMenu(data);
@@ -46,7 +46,7 @@ function Menu() {
     };
     
     const fetchKind = async () => {
-        fetch('http://127.0.0.1:5000/api/kind')
+        await fetch('http://127.0.0.1:5000/api/kind')
         .then(response => response.json())
         .then(data => {
             let res = data.kind;
@@ -56,7 +56,7 @@ function Menu() {
     };
 
     const fetchMenu = async () => {
-        fetch('http://127.0.0.1:5000/api/menu')
+        await fetch('http://127.0.0.1:5000/api/menu')
         .then(response => response.json())
         .then(data => {
             setMenu(data);
@@ -64,7 +64,7 @@ function Menu() {
     }
 
     const fetchRecommend = async () => {
-        fetch('http://127.0.0.1:5000/api/menu/' + age)
+        await fetch('http://127.0.0.1:5000/api/menu/' + age)
         .then(response => response.json())
         .then(data => {
             setRecommendMenu(data);

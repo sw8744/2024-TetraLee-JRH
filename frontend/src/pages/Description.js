@@ -16,7 +16,7 @@ function Description() {
     const navigate = useNavigate();
 
     const fetchId = async () => {
-        fetch('http://127.0.0.1:5000/api/getinfo/' + id)
+        await fetch('http://127.0.0.1:5000/api/getinfo/' + id)
         .then(response => response.json())
         .then(data => {
             setWhereToEat(data.wheretoeat);
@@ -24,7 +24,7 @@ function Description() {
     }
 
     const getClickedFood = async () => {
-        fetch('http://127.0.0.1:5000/api/getfoodinfo/' + clickedFood)
+        await fetch('http://127.0.0.1:5000/api/getfoodinfo/' + clickedFood)
         .then(response => response.json())
         .then(data => {
             setInfo(data[0]);
@@ -33,7 +33,7 @@ function Description() {
     }
 
     const getAmount = async () => {
-        fetch('http://127.0.0.1:5000/api/getfoodamount/' + id + '/' + clickedFood)
+        await fetch('http://127.0.0.1:5000/api/getfoodamount/' + id + '/' + clickedFood)
         .then(response => response.json())
         .then(data => {
             setAmount(data.amount);
@@ -51,7 +51,7 @@ function Description() {
     const order = async () => {
         id = Number(id);
         id = String(id);
-        fetch('http://127.0.0.1:5000/api/order/' + id + '/' + clickedFood + '/' + amount,
+        await fetch('http://127.0.0.1:5000/api/order/' + id + '/' + clickedFood + '/' + amount,
          {
             method: 'POST'
          }

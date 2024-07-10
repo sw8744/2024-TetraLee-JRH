@@ -10,10 +10,10 @@ function First() {
             now = Date.now();
         }
     }
-     const touch = () => {
-        getSpeech('키에 맞춰 높이를 조절 중입니다! 화면이 멈추면 진행해주세요.');
+     const touch = async () => {
+        await getSpeech('키에 맞춰 높이를 조절 중입니다! 화면이 멈추면 진행해주세요.');
         wait(5.5);
-        fetch('http://127.0.0.1:5000/api/updown')
+        await fetch('http://127.0.0.1:5000/api/updown')
         .then(response => response.json());
         navigate('/wheretoeat');
     }
