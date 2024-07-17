@@ -10,7 +10,7 @@ const getSpeech = (text) => {
       window.speechSynthesis.onvoiceschanged = setVoiceList;
     }
   
-    const speech = (txt) => {
+    const speech = async (txt) => {
       const lang = "ko-KR";
       const utterThis = new SpeechSynthesisUtterance(txt);
   
@@ -25,8 +25,7 @@ const getSpeech = (text) => {
       } else {
         return;
       }
-  
-      window.speechSynthesis.speak(utterThis);
+      await window.speechSynthesis.speak(utterThis);
     };
   
     speech(text);
