@@ -31,7 +31,7 @@ capture.set(cv2.CAP_PROP_FRAME_WIDTH, width)
 capture.set(cv2.CAP_PROP_FRAME_HEIGHT, height)
 
 connection = psycopg2.connect(
-    host="gigaimpact.kro.kr",
+    host="thislifewon.kro.kr",
     database="kiosk",
     port=5432,
     user="jrh",

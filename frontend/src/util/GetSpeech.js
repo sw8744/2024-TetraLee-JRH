@@ -25,6 +25,7 @@ const getSpeech = (text) => {
       } else {
         return;
       }
+      window.speechSynthesis.cancel();
       await window.speechSynthesis.speak(utterThis);
     };
   
