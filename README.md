@@ -10,6 +10,16 @@
 - FrontEnd : `React.js (yarn)`
 - BackEnd : `Python (FastAPI)`
 
+# 주요 기능
+- OpenCV 얼굴 인식과 리니어 레일을 활용한 사용자 맞춤 높이 조절
+- 나이 추정 딥러닝 모델을 통한 사용자 맞춤 추천메뉴 제공
+
+
+# 결과
+![image](./assets/moving.gif)
+![image](./assets/sitting.jpeg)
+![image](./assets/standing.jpeg)
+
 # 실행 방법
 - `pip install -r requirements.txt` 명령어를 통한 Python 필요 라이브러리 설치
 - `cd backend` 명령어를 통해 backend 폴더로 접속
